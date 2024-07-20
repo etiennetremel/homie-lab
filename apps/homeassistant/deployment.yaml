@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: homeassistant
+      containers:
+        - name: homeassistant
+          image: lscr.io/linuxserver/homeassistant
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8123
+              protocol: TCP
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Amsterdam"
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: configuration
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+        - name: configuration
+          configMap:
+            name: configuration
+            defaultMode: 0777

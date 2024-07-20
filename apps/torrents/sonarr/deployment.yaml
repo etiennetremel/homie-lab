@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: sonarr
+      containers:
+        - name: sonarr
+          image: lscr.io/linuxserver/sonarr
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8989
+              protocol: TCP
+          env:
+            - name: UMASK_SET
+              value: "022"
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Europe/Amsterdam"
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads/torrents
+              subPath: torrents
+            - name: downloads
+              mountPath: /downloads/tv
+              subPath: tv
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-config
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads

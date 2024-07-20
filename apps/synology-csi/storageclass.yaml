@@ -1,0 +1,15 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+  name: syno-storage
+provisioner: csi.san.synology.com
+parameters:
+  csi.storage.k8s.io/fstype: btrfs
+  dsm: 192.168.94.245
+  location: /volume1
+  type: thin
+  formatOptions: '--nodiscard'
+reclaimPolicy: Delete
+allowVolumeExpansion: true

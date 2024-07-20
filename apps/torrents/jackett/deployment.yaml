@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jackett
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: jackett
+      containers:
+        - name: jackett
+          image: lscr.io/linuxserver/jackett
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9117
+              protocol: TCP
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads/torrents
+              subPath: torrents
+            - name: downloads
+              mountPath: /downloads/movies
+              subPath: movies
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jackett-config
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads

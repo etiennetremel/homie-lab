@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../apps/cert-manager
+  - ../../apps/external-dns
+  - ../../apps/homeassistant
+  - ../../apps/ingress-nginx
+  - ../../apps/torrents
+  - ../../apps/synology-csi
+  - ./ingresses.yaml
+
+patches:
+  - path: ./letsencrypt.patch.yaml
+    target:
+      group: cert-manager.io
+      version: v1
+      kind: ClusterIssuer
+
+secretGenerator:
+  - name: cloudflare-api-token-secret
+    namespace: cert-manager
+    behavior: merge
+    files:
+      - api-token=cloudflare-api-token.secret
+  - name: cloudflare-api-token-secret
+    namespace: external-dns
+    behavior: merge
+    files:
+      - api-token=cloudflare-api-token.secret
+  - name: client-info-secret
+    namespace: synology-csi
+    behavior: merge
+    files:
+      - client-info.yml=synalogy-client-info.yaml.secret
+  - name: gluetun-secrets
+    namespace: torrents
+    behavior: merge
+    envs:
+      - gluetun.env.secret

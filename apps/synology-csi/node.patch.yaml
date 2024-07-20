@@ -1,0 +1,20 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: synology-csi-node
+  namespace: synology-csi
+spec:
+  template:
+    spec:
+      hostPID: true
+      containers:
+        - name: csi-plugin
+          volumeMounts:
+            - name: chroot
+              mountPath: /csibin/chroot.sh
+              subPath: chroot.sh
+      volumes:
+        - name: chroot
+          configMap:
+            name: synology-chroot-override
+            defaultMode: 0777

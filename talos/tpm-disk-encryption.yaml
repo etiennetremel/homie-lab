@@ -1,0 +1,39 @@
+machine:
+  # specify installation disk
+  install:
+    disk: /dev/nvme0n1
+    wipe: true
+
+  # enable disk encryption
+  systemDiskEncryption:
+    ephemeral:
+      provider: luks2
+      keys:
+        - slot: 0
+          tpm: {}
+    state:
+      provider: luks2
+      keys:
+        - slot: 0
+          tpm: {}
+
+  certSANs:
+    - 192.168.94.254
+
+  kubelet:
+    extraArgs:
+      rotate-server-certificates: true
+
+cluster:
+  # single node Kubernetes deployment
+  allowSchedulingOnControlPlanes: true
+
+  apiServer:
+    certSANs:
+        - 192.168.94.254
+
+  # install metrics-server
+  extraManifests:
+    - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/standard-install.yaml
+    - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+    - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml

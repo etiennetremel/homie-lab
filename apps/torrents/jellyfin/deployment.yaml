@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: jellyfin
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8096
+              protocol: TCP
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads/torrents
+              subPath: torrents
+            - name: downloads
+              mountPath: /downloads/movies
+              subPath: movies
+            - name: downloads
+              mountPath: /downloads/tv
+              subPath: tv
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads

@@ -1,0 +1,155 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  name: homeassistant
+  namespace: homeassistant
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: PLACEHOLDER
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: homeassistant
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - PLACEHOLDER
+      secretName: ingress-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  name: jackett
+  namespace: torrents
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: PLACEHOLDER
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: jackett
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - PLACEHOLDER
+      secretName: jackett-ingress-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  name: jellyfin
+  namespace: torrents
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: PLACEHOLDER
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: jellyfin
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - PLACEHOLDER
+      secretName: jellyfin-ingress-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  name: qbittorrent
+  namespace: torrents
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: PLACEHOLDER
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: qbittorrent
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - PLACEHOLDER
+      secretName: qbittorrent-ingress-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  name: radarr
+  namespace: torrents
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: PLACEHOLDER
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: radarr
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - PLACEHOLDER
+      secretName: radarr-ingress-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  name: sonarr
+  namespace: torrents
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: PLACEHOLDER
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: sonarr
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - PLACEHOLDER
+      secretName: sonarr-ingress-tls

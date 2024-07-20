@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      serviceAccountName: qbittorrent
+      initContainers:
+        - name: gluetun
+          image: ghcr.io/qdm12/gluetun:latest
+          restartPolicy: Always
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http-proxy
+              containerPort: 8888
+              protocol: TCP
+            - name: tcp-shadowsocks
+              containerPort: 8388
+              protocol: TCP
+            - name: udp-shadowsocks
+              containerPort: 8388
+              protocol: UDP
+          envFrom:
+            - secretRef:
+                name: gluetun-secrets
+                optional: false
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+            - name: FIREWALL_DEBUG
+              value: "on"
+            - name: FIREWALL_INPUT_PORTS
+              value: "8080"
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+      containers:
+        - name: qbittorrent
+          image: lscr.io/linuxserver/qbittorrent
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: torrent-tcp
+              containerPort: 6881
+              protocol: TCP
+            - name: torrent-udp
+              containerPort: 6881
+              protocol: UDP
+          env:
+            - name: UMASK_SET
+              value: "022"
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Europe/Amsterdam"
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: default-config
+              mountPath: /config/qBittorrent/qBittorrent.conf
+              subPath: qBittorrent.conf
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads/torrents
+              subPath: torrents
+      volumes:
+        - name: default-config
+          configMap:
+            name: qbittorrent-default-config
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads

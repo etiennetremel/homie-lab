@@ -24,6 +24,11 @@ machine:
     extraArgs:
       rotate-server-certificates: true
 
+  udev:
+    rules:
+      - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
+      - SUBSYSTEM=="drm", KERNEL=="card*", GROUP="44", MODE="0660"
+
 cluster:
   # single node Kubernetes deployment
   allowSchedulingOnControlPlanes: true

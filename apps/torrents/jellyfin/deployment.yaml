@@ -8,21 +8,34 @@ spec:
   template:
     spec:
       serviceAccountName: jellyfin
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        supplementalGroups:
+          - 44 # video group
       containers:
         - name: jellyfin
-          image: lscr.io/linuxserver/jellyfin
+          image: lscr.io/linuxserver/jellyfin:10.9.8
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 8096
               protocol: TCP
           env:
+            - name: UMASK_SET
+              value: "022"
+            - name: DOCKER_MODS
+              value: linuxserver/mods:jellyfin-opencl-intel
             - name: TZ
               value: "Europe/Amsterdam"
           resources:
             requests:
               cpu: 100m
               memory: 2Gi
+            limits:
+              cpu: 8000m
+          securityContext:
+            privileged: true
           livenessProbe:
             httpGet:
               path: /
@@ -35,14 +48,9 @@ spec:
             - name: config
               mountPath: /config
             - name: downloads
-              mountPath: /downloads/torrents
-              subPath: torrents
-            - name: downloads
-              mountPath: /downloads/movies
-              subPath: movies
-            - name: downloads
-              mountPath: /downloads/tv
-              subPath: tv
+              mountPath: /downloads
+            - name: dri
+              mountPath: /dev/dri
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -50,3 +58,6 @@ spec:
         - name: downloads
           persistentVolumeClaim:
             claimName: downloads
+        - name: dri
+          hostPath:
+            path: /dev/dri

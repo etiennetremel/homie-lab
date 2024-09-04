@@ -13,13 +13,24 @@ spec:
           image: registry.k8s.io/external-dns/external-dns:v0.14.2
           imagePullPolicy: IfNotPresent
           args:
-            - --source=service
             - --source=ingress
             - --registry=txt
             - --provider=cloudflare
-          env:
-            - name: CF_API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  key: api-token
-                  name: cloudflare-api-token-secret
+          ports:
+            - containerPort: 7979
+              name: http
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: cloudflare-secrets
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+              scheme: HTTP
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /healthz
+              port: http
+              scheme: HTTP

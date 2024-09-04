@@ -5,6 +5,10 @@ namespace: cert-manager
 
 resources:
   - https://github.com/cert-manager/cert-manager/releases/download/v1.15.1/cert-manager.yaml
-  - ./cloudflare-api-token.yaml
   - ./letsencrypt-staging.yaml
   - ./letsencrypt-production.yaml
+
+secretGenerator:
+  - name: cloudflare-secrets
+    envs:
+      - ./cloudflare-secrets.env

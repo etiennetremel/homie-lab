@@ -39,9 +39,9 @@ diskutil eject /dev/disk3
 ### 2. Prepare Kubernetes cluster
 
 ```bash
-# following image include btrfs and iscsi-tools extensions, you can generate
+# following image include btrfs, iscsi-tools and intel-ucode extensions, you can generate
 # your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/446d7bb4b23caecb9134bcab115e52d55af742da8e04760817f6a31997dc32d9:v1.7.5
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/d5d03b45c31d2e92ae453e9ec40b525be0866d02919e495ea8480cfcb293640f:v1.7.6
 
 export MACHINE_IP=192.168.94.254
 
@@ -77,9 +77,9 @@ ContainerCreating state for a while depending on the disk size.
 ## Cluster upgrade
 
 ```bash
-# following image include btrfs and iscsi-tools extensions, you can generate
+# following image include btrfs, iscsi-tools and intel-ucode extensions, you can generate
 # your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/446d7bb4b23caecb9134bcab115e52d55af742da8e04760817f6a31997dc32d9:v1.7.5
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/d5d03b45c31d2e92ae453e9ec40b525be0866d02919e495ea8480cfcb293640f:v1.7.6
 
 export MACHINE_IP=192.168.94.254
 

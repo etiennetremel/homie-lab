@@ -2,12 +2,16 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - cloudflare-api-token.yaml
   - deployment.yaml
   - namespace.yaml
   - rbac.yaml
 
 namespace: external-dns
+
+secretGenerator:
+  - name: cloudflare-secrets
+    envs:
+      - ./cloudflare-secrets.env
 
 labels:
   - includeSelectors: true

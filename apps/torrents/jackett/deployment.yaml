@@ -10,7 +10,7 @@ spec:
       serviceAccountName: jackett
       containers:
         - name: jackett
-          image: lscr.io/linuxserver/jackett
+          image: lscr.io/linuxserver/jackett:0.22.360
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

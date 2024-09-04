@@ -8,9 +8,9 @@ http:
     - 10.244.0.0/24
 
 # Load frontend themes from the themes folder
-frontend:
-  themes: !include_dir_merge_named themes
-
-automation: !include automations.yaml
-script: !include scripts.yaml
-scene: !include scenes.yaml
+# frontend:
+#   themes: !include_dir_merge_named themes
+#
+# automation: !include automations.yaml
+# script: !include scripts.yaml
+# scene: !include scenes.yaml

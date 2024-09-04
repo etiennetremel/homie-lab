@@ -14,10 +14,9 @@ patches:
 
 namespace: synology-csi
 
-generatorOptions:
-  disableNameSuffixHash: true
-
 configMapGenerator:
   - name: synology-chroot-override
     files:
       - chroot.sh
+    options:
+      disableNameSuffixHash: true

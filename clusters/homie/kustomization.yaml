@@ -16,25 +16,31 @@ patches:
       group: cert-manager.io
       version: v1
       kind: ClusterIssuer
+  - path: ./external-dns.patch.yaml
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: external-dns
 
 secretGenerator:
-  - name: cloudflare-api-token-secret
+  - name: cloudflare-secrets
     namespace: cert-manager
-    behavior: merge
-    files:
-      - api-token=cloudflare-api-token.secret
-  - name: cloudflare-api-token-secret
+    behavior: replace
+    envs:
+      - cloudflare-secrets.secret.env
+  - name: cloudflare-secrets
     namespace: external-dns
-    behavior: merge
-    files:
-      - api-token=cloudflare-api-token.secret
+    behavior: replace
+    envs:
+      - cloudflare-secrets.secret.env
   - name: client-info-secret
     namespace: synology-csi
-    behavior: merge
+    behavior: replace
     files:
       - client-info.yml=synalogy-client-info.yaml.secret
   - name: gluetun-secrets
     namespace: torrents
-    behavior: merge
+    behavior: replace
     envs:
       - gluetun.env.secret

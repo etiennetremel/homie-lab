@@ -6,6 +6,14 @@
   "kubernetes": {
     "fileMatch": ["\\.yaml$"]
   },
+  "regexManagers": [{
+    "fileMatch": ["kustomization.yaml$"],
+    "matchStrings": [
+      "https://github.com/(?<depNameTemplate>[^/]+/[^/]+)/releases/download/(?<currentValue>[^/]+)/"
+    ],
+    "datasource": "github-tags",
+    "versioningTemplate": "semver"
+  }],
   "packageRules": [{
     "description": "Fix legacy versioning in upstream jellyfin",
     "matchDatasources": ["docker"],

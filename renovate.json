@@ -10,7 +10,7 @@
     "customType": "regex",
     "fileMatch": ["(^|/)kustomization.yaml$"],
     "matchStrings": [
-      "https://github.com/(?<depNameTemplate>[^/]+/[^/]+)/releases/download/(?<currentValue>[^/]+)/"
+      "https://github.com/(?<depName>[^/]+/[^/]+)/releases/download/(?<currentValue>[^/]+)/"
     ],
     "datasourceTemplate": "github-tags",
     "versioningTemplate": "semver"

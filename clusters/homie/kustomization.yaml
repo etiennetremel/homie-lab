@@ -27,11 +27,15 @@ secretGenerator:
   - name: cloudflare-secrets
     namespace: cert-manager
     behavior: replace
+    options:
+      disableNameSuffixHash: true
     envs:
       - cloudflare-secrets.secret.env
   - name: cloudflare-secrets
     namespace: external-dns
     behavior: replace
+    options:
+      disableNameSuffixHash: true
     envs:
       - cloudflare-secrets.secret.env
   - name: client-info-secret

@@ -6,12 +6,13 @@
   "kubernetes": {
     "fileMatch": ["\\.yaml$"]
   },
-  "regexManagers": [{
-    "fileMatch": ["kustomization.yaml$"],
+  "customManagers": [{
+    "customType": "regex",
+    "fileMatch": ["(^|/)kustomization.yaml$"],
     "matchStrings": [
       "https://github.com/(?<depNameTemplate>[^/]+/[^/]+)/releases/download/(?<currentValue>[^/]+)/"
     ],
-    "datasource": "github-tags",
+    "datasourceTemplate": "github-tags",
     "versioningTemplate": "semver"
   }],
   "packageRules": [{

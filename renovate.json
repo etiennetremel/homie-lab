@@ -14,9 +14,13 @@
       "https://raw.githubusercontent.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>[^/]+)/"
     ],
     "datasourceTemplate": "github-tags",
-    "versioningTemplate": "semver-coerced"
+    "versioningTemplate": "semver"
   }],
   "packageRules": [{
+    "matchDatasources": ["github-tags"],
+    "versionCompatibility": "^((?<compatibility>.*)-)?(?<version>.*)$",
+    "versioning": "semver"
+  }, {
     "description": "Fix legacy versioning in upstream jellyfin",
     "matchDatasources": ["docker"],
     "matchPackageNames": ["lscr.io/linuxserver/jellyfin"],

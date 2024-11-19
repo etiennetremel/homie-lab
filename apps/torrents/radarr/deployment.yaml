@@ -10,7 +10,7 @@ spec:
       serviceAccountName: radarr
       containers:
         - name: radarr
-          image: lscr.io/linuxserver/radarr:5.14.0
+          image: lscr.io/linuxserver/radarr:5.15.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -40,7 +40,7 @@ spec:
               - NET_ADMIN
       containers:
         - name: qbittorrent
-          image: lscr.io/linuxserver/qbittorrent:5.0.1
+          image: lscr.io/linuxserver/qbittorrent:5.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -10,7 +10,7 @@ spec:
       serviceAccountName: homeassistant
       containers:
         - name: homeassistant
-          image: lscr.io/linuxserver/homeassistant:2024.11.2
+          image: lscr.io/linuxserver/homeassistant:2024.11.3
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

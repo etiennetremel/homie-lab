@@ -21,8 +21,10 @@ following stack:
 ### 1. Prepare secure boot image to start Talos on the machine (OSX)
 
 ```bash
-# pull latest SecureBoot image
-wget https://factory.talos.dev/image/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba/v1.7.0/metal-amd64-secureboot.iso
+# following image has secureboot enabled and include btrfs, iscsi-tools,
+# mei, intel-i915-ucode and intel-ucode extensions.
+# You can generate your own image from https://factory.talos.dev
+wget https://factory.talos.dev/image/27cd88c6192a720b4f1765d7a2093a0f5c823c88109fa8452b3e975cd60c7636/v1.8.3/metal-amd64-secureboot.iso
 
 hdiutil convert -format UDRW -o metal-amd64-secureboot.img metal-amd64-secureboot.iso
 mv metal-amd64-secureboot.img{.dmg,}
@@ -39,9 +41,10 @@ diskutil eject /dev/disk3
 ### 2. Prepare Kubernetes cluster
 
 ```bash
-# following image include btrfs, iscsi-tools and intel-ucode extensions, you can generate
-# your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/d5d03b45c31d2e92ae453e9ec40b525be0866d02919e495ea8480cfcb293640f:v1.7.6
+# following image has secureboot enabled and include btrfs, iscsi-tools,
+# mei, intel-i915-ucode and intel-ucode extensions.
+# You can generate your own image from https://factory.talos.dev
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/27cd88c6192a720b4f1765d7a2093a0f5c823c88109fa8452b3e975cd60c7636:v1.8.3
 
 export MACHINE_IP=192.168.94.254
 
@@ -76,10 +79,13 @@ ContainerCreating state for a while depending on the disk size.
 
 ## Cluster upgrade
 
+### Talos upgrade
+
 ```bash
-# following image include btrfs, iscsi-tools and intel-ucode extensions, you can generate
-# your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/d5d03b45c31d2e92ae453e9ec40b525be0866d02919e495ea8480cfcb293640f:v1.7.6
+# following image include btrfs, iscsi-tools, mei, intel-i915-ucode and
+# intel-ucode extensions, you can generate your own image from
+# https://factory.talos.dev
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/27cd88c6192a720b4f1765d7a2093a0f5c823c88109fa8452b3e975cd60c7636:v1.8.3
 
 export MACHINE_IP=192.168.94.254
 
@@ -87,6 +93,21 @@ talosctl upgrade -n "$MACHINE_IP" \
   --talosconfig=talosconfig \
   --image "$TALOS_FACTORY_IMAGE_INSTALLER" \
   --preserve
+
+talosctl -n "$MACHINE_IP" apply-config \
+  --insecure \
+  -f controlplane.yaml
+```
+
+### Kubernetes
+
+```bash
+export MACHINE_IP=192.168.94.254
+export KUBERNETES_VERSION=1.31.2
+
+talosctl -n "$MACHINE_IP" upgrade-k8s \
+  --talosconfig=talosconfig \
+  --to "$KUBERNETES_VERSION"
 ```
 
 ### 4. Testing

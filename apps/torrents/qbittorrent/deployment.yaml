@@ -10,7 +10,7 @@ spec:
       serviceAccountName: qbittorrent
       initContainers:
         - name: gluetun
-          image: ghcr.io/qdm12/gluetun:latest
+          image: ghcr.io/qdm12/gluetun:v3.39.1
           restartPolicy: Always
           imagePullPolicy: IfNotPresent
           ports:
@@ -26,7 +26,6 @@ spec:
           envFrom:
             - secretRef:
                 name: gluetun-secrets
-                optional: false
           env:
             - name: TZ
               value: "Europe/Amsterdam"
@@ -35,9 +34,13 @@ spec:
             - name: FIREWALL_INPUT_PORTS
               value: "8080"
           securityContext:
+            privileged: true
             capabilities:
               add:
-              - NET_ADMIN
+                - NET_ADMIN
+          volumeMounts:
+            - name: tun
+              mountPath: /dev/net/tun
       containers:
         - name: qbittorrent
           image: lscr.io/linuxserver/qbittorrent:5.0.2
@@ -94,3 +97,6 @@ spec:
         - name: downloads
           persistentVolumeClaim:
             claimName: downloads
+        - name: tun
+          hostPath:
+            path: /dev/net/tun

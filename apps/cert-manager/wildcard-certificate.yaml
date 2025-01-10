@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-certificate
+  namespace: cert-manager
+spec:
+  secretName: wildcard-certificate
+  commonName: PLACEHOLDER
+  dnsNames:
+    - PLACEHOLDER
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+    group: cert-manager.io

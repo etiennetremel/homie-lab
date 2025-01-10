@@ -11,6 +11,7 @@ resources:
   - ./ingresses.yaml
 
 patches:
+  - path: ./wildcard-certificate.patch.yaml
   - path: ./letsencrypt.patch.yaml
     target:
       group: cert-manager.io

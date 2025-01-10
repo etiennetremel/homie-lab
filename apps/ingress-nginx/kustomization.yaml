@@ -6,3 +6,12 @@ resources:
 
 patches:
   - path: service.patch.yaml
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: ingress-nginx-controller
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --default-ssl-certificate=cert-manager/wildcard-certificate

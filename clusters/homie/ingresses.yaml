@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-production
   name: homeassistant
   namespace: homeassistant
 spec:
@@ -21,15 +20,13 @@ spec:
                   name: http
   tls:
     - hosts:
-        - PLACEHOLDER
-      secretName: ingress-tls
+        - 'PLACEHOLDER'
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-production
   name: jackett
   namespace: torrents
 spec:
@@ -47,15 +44,13 @@ spec:
                   name: http
   tls:
     - hosts:
-        - PLACEHOLDER
-      secretName: jackett-ingress-tls
+        - 'PLACEHOLDER'
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-production
   name: jellyfin
   namespace: torrents
 spec:
@@ -73,15 +68,13 @@ spec:
                   name: http
   tls:
     - hosts:
-        - PLACEHOLDER
-      secretName: jellyfin-ingress-tls
+        - 'PLACEHOLDER'
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-production
   name: qbittorrent
   namespace: torrents
 spec:
@@ -99,15 +92,13 @@ spec:
                   name: http
   tls:
     - hosts:
-        - PLACEHOLDER
-      secretName: qbittorrent-ingress-tls
+        - 'PLACEHOLDER'
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-production
   name: radarr
   namespace: torrents
 spec:
@@ -125,15 +116,13 @@ spec:
                   name: http
   tls:
     - hosts:
-        - PLACEHOLDER
-      secretName: radarr-ingress-tls
+        - 'PLACEHOLDER'
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-production
   name: sonarr
   namespace: torrents
 spec:
@@ -151,5 +140,4 @@ spec:
                   name: http
   tls:
     - hosts:
-        - PLACEHOLDER
-      secretName: sonarr-ingress-tls
+        - 'PLACEHOLDER'

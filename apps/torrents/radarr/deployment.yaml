@@ -27,10 +27,10 @@ spec:
               value: "Europe/Amsterdam"
           resources:
             limits:
-              memory: 512Mi
+              memory: 1024Mi
             requests:
               cpu: 50m
-              memory: 512Mi
+              memory: 1024Mi
           livenessProbe:
             httpGet:
               path: /

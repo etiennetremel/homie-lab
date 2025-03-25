@@ -49,3 +49,13 @@ secretGenerator:
     behavior: replace
     envs:
       - gluetun.env.secret
+  - name: qbittorrent-gluetun-config
+    namespace: torrents
+    behavior: replace
+    files:
+      - gluetun.toml=gluetun.toml.secret
+  - name: qbittorrent-secrets
+    namespace: torrents
+    behavior: merge
+    envs:
+      - qbittorrent.env.secret

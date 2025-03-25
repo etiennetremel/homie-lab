@@ -16,6 +16,12 @@ secretGenerator:
   - name: gluetun-secrets
     envs:
       - gluetun.env
+  - name: qbittorrent-secrets
+    envs:
+      - qbittorrent.env
+  - name: qbittorrent-gluetun-config
+    files:
+      - gluetun.toml=gluetun.toml
 
 configMapGenerator:
   - name: qbittorrent-default-config

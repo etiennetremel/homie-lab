@@ -1,0 +1,7 @@
+[[roles]]
+name = "t-anc/GSP-Qbittorent-Gluetun-sync-port-mod"
+routes = ["GET /v1/openvpn/portforwarded"]
+auth = "apikey"
+# replace PLACEHOLDER with a random string, you can use openssl rand for
+# generating it: openssl rand -base64 50
+apikey = "PLACEHOLDER"

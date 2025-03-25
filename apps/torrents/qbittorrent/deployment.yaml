@@ -14,6 +14,9 @@ spec:
           restartPolicy: Always
           imagePullPolicy: IfNotPresent
           ports:
+            - name: control-server
+              containerPort: 8000
+              protocol: TCP
             - name: http-proxy
               containerPort: 8888
               protocol: TCP
@@ -26,6 +29,20 @@ spec:
           envFrom:
             - secretRef:
                 name: gluetun-secrets
+          livenessProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - show
+                - tun0
+          readinessProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - show
+                - tun0
           env:
             - name: TZ
               value: "Europe/Amsterdam"
@@ -41,6 +58,9 @@ spec:
           volumeMounts:
             - name: tun
               mountPath: /dev/net/tun
+            - name: gluetun-config
+              mountPath: /gluetun/auth/config.toml
+              subPath: gluetun.toml
       containers:
         - name: qbittorrent
           image: lscr.io/linuxserver/qbittorrent:5.0.4
@@ -64,9 +84,10 @@ spec:
               value: "0"
             - name: TZ
               value: "Europe/Amsterdam"
+          envFrom:
+            - secretRef:
+                name: qbittorrent-secrets
           resources:
-            limits:
-              memory: 512Mi
             requests:
               cpu: 50m
               memory: 512Mi
@@ -88,6 +109,9 @@ spec:
               mountPath: /downloads/torrents
               subPath: torrents
       volumes:
+        - name: gluetun-config
+          secret:
+            secretName: qbittorrent-gluetun-config
         - name: default-config
           configMap:
             name: qbittorrent-default-config

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      serviceAccountName: n8n
+      containers:
+        - name: n8n
+          image: docker.n8n.io/n8nio/n8n:1.85.4
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: N8N_HIRING_BANNER_ENABLED
+              value: "false"
+            - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+              value: "true"
+            - name: GENERIC_TIMEZONE
+              value: "Europe/Amsterdam"
+          ports:
+            - name: http
+              containerPort: 5678
+              protocol: TCP
+          resources:
+            limits:
+              memory: 2048Mi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 60
+          volumeMounts:
+            - name: data
+              mountPath: /home/node/n8n
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: n8n-data

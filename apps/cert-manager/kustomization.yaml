@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: cert-manager
 
 resources:
-  - https://github.com/cert-manager/cert-manager/releases/download/v1.17.1/cert-manager.yaml
+  - https://github.com/cert-manager/cert-manager/releases/download/v1.17.2/cert-manager.yaml
   - ./letsencrypt-staging.yaml
   - ./letsencrypt-production.yaml
   - ./wildcard-certificate.yaml

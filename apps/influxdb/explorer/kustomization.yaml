@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - serviceaccount.yaml
+
+namespace: influxdb
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app: influxdb-explorer

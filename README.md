@@ -71,7 +71,7 @@ Make appropriate patches to ingresses/secrets. Then:
 
 ```bash
 # apply kubernetes config using Kustomize
-kubectl apply -k ./clusters/homie
+kustomize build --enable-helm clusters/homie | kubectl apply -f -
 ```
 
 Notes: while formatting the disk on the first run, the associated pod will stay in a

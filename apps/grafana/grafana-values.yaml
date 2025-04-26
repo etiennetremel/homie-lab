@@ -1,0 +1,33 @@
+grafana.ini:
+  users:
+    allow_sign_up: false
+
+envFromSecrets:
+  - name: grafana-datasource-secrets
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    prune: true
+    datasources:
+      - name: InfluxDB
+        uid: influxdb
+        type: influxdb
+        access: proxy
+        url: http://influxdb-core.influxdb.svc.cluster.local:80
+        isDefault: true
+        user: grafana
+        jsonData:
+          version: SQL
+          dbName: default
+          httpMode: POST
+          insecureGrpc: true
+        secureJsonData:
+          token: $INFLUXDB_TOKEN
+
+persistence:
+  enabled: true
+  storageClassName: syno-storage
+  accessModes:
+    - ReadWriteMany
+  size: 2Gi

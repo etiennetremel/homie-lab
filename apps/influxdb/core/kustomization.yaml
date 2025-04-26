@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - job.yaml
+  - pvc.yaml
+  - service.yaml
+  - serviceaccount.yaml
+
+namespace: influxdb
+
+secretGenerator:
+  - name: influxdb-core-secrets
+    envs:
+      - ./influxdb-core-secrets.env
+
+configMapGenerator:
+  - name: influxdb-core-init
+    files:
+      - ./influxdb-core-init.sh
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app: influxdb-core

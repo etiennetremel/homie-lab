@@ -1,2 +1,3 @@
 *.secret
 letsencrypt.patch.yaml
+charts/

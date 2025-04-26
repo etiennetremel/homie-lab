@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb-explorer
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: influxdb-explorer
+      containers:
+        - name: influxdb-explorer
+          image: quay.io/influxdb/influxdb3-explorer:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8888
+              name: http
+              protocol: TCP
+          ## TODO: check with maintainers
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          #     scheme: HTTP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          #     scheme: HTTP
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 100
+            runAsGroup: 101

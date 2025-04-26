@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: influxdb-core-init
+spec:
+  ttlSecondsAfterFinished: 10
+  template:
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: influxdb-core
+      containers:
+        - name: influxdb-core
+          image: influxdb:3-core
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8181
+              name: http
+              protocol: TCP
+          command:
+            - /scripts/influxdb-core-init.sh
+          envFrom:
+            - secretRef:
+                name: influxdb-core-secrets
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1500
+            runAsGroup: 1500
+          volumeMounts:
+            - mountPath: /scripts
+              name: scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: influxdb-core-init
+            defaultMode: 0777

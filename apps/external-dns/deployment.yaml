@@ -23,6 +23,9 @@ spec:
           envFrom:
             - secretRef:
                 name: cloudflare-secrets
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /healthz

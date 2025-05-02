@@ -55,6 +55,10 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - name: tun
               mountPath: /dev/net/tun
@@ -91,6 +95,15 @@ spec:
             requests:
               cpu: 50m
               memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - SETGID
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /

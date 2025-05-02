@@ -25,6 +25,16 @@ spec:
             requests:
               cpu: 50m
               memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - SETGID
+                - SETUID
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /health

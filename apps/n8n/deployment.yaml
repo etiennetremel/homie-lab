@@ -46,13 +46,13 @@ spec:
               path: /healthz
               port: http
             initialDelaySeconds: 60
-          volumeMounts:
-            - name: data
-              mountPath: /home/node/.n8n/
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
             runAsGroup: 1000
+          volumeMounts:
+            - name: data
+              mountPath: /home/node/.n8n/
       volumes:
         - name: data
           persistentVolumeClaim:

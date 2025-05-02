@@ -36,6 +36,12 @@ spec:
               cpu: 8000m
           securityContext:
             privileged: true
+            allowPrivilegeEscalation: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /

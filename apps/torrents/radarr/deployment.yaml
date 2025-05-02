@@ -31,6 +31,15 @@ spec:
             requests:
               cpu: 50m
               memory: 1024Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - SETGID
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /

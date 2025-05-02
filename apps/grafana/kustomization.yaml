@@ -3,6 +3,9 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
+  - dashboards/
+
+namespace: grafana
 
 secretGenerator:
   - name: grafana-datasource-secrets

@@ -19,15 +19,26 @@ datasources:
         user: grafana
         jsonData:
           version: SQL
-          dbName: default
+          dbName: sensors
           httpMode: POST
           insecureGrpc: true
         secureJsonData:
           token: $INFLUXDB_TOKEN
 
-persistence:
-  enabled: true
-  storageClassName: syno-storage
-  accessModes:
-    - ReadWriteMany
-  size: 2Gi
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    labelValue: "1"
+    searchNamespace: grafana
+    provider:
+      allowUiUpdates: false
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 10m
+        memory: 64Mi
+
+testFramework:
+  enabled: false

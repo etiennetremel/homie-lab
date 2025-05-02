@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: mosquitto
+      initContainers:
+        - name: fix-perms
+          image: eclipse-mosquitto:2.0.21
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - |
+              chown -R 1883:1883 /mosquitto
+              cp /creds-readonly/password_file /creds-writable/password_file
+              chmod 0700 /creds-writable/password_file
+              chown mosquitto: /creds-writable/password_file
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 0
+          volumeMounts:
+            - name: data
+              mountPath: /mosquitto/data
+            - name: logs
+              mountPath: /mosquitto/logs
+            - name: creds-readonly
+              mountPath: /creds-readonly
+            - name: creds-writable
+              mountPath: /creds-writable
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:2.0.21
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - |
+              mosquitto_passwd -U /etc/mosquitto/password_file
+              /docker-entrypoint.sh /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf
+          ports:
+            - name: mqtt
+              containerPort: 1883
+              protocol: TCP
+            - name: mqtt-tls
+              containerPort: 8883
+              protocol: TCP
+            - name: websocket
+              containerPort: 9001
+              protocol: TCP
+            - name: websocket-tls
+              containerPort: 9443
+              protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsUser: 1883
+            runAsGroup: 1883
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+          volumeMounts:
+            - name: data
+              mountPath: /mosquitto/data
+            - name: logs
+              mountPath: /mosquitto/logs
+            - name: config
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+            - name: creds-writable
+              mountPath: /etc/mosquitto/password_file
+              subPath: password_file
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mosquitto-data
+        - name: logs
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: mosquitto-config
+        - name: creds-readonly
+          secret:
+            secretName: mosquitto-credentials
+            defaultMode: 0777
+        - name: creds-writable
+          emptyDir: {}

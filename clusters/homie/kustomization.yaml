@@ -4,11 +4,19 @@ kind: Kustomization
 resources:
   - ../../apps/cert-manager
   - ../../apps/external-dns
-  - ../../apps/homeassistant
   - ../../apps/ingress-nginx
-  - ../../apps/torrents
+  - ../../apps/influxdb
   - ../../apps/synology-csi
+  - ../../apps/torrents
+  - ../../apps/grafana
+  - ../../apps/nanomq
+  - ../../apps/devices
   - ./ingresses.yaml
+  ## not being used at this time
+  # - ../../apps/kubernetes-replicator
+  # - ../../apps/mosquitto
+  # - ../../apps/homeassistant
+  # - ../../apps/n8n
 
 patches:
   - path: ./wildcard-certificate.patch.yaml
@@ -17,6 +25,13 @@ patches:
       group: cert-manager.io
       version: v1
       kind: ClusterIssuer
+      name: letsencrypt-production
+  - path: ./letsencrypt.patch.yaml
+    target:
+      group: cert-manager.io
+      version: v1
+      kind: ClusterIssuer
+      name: letsencrypt-staging
   - path: ./external-dns.patch.yaml
     target:
       group: apps
@@ -31,14 +46,14 @@ secretGenerator:
     options:
       disableNameSuffixHash: true
     envs:
-      - cloudflare-secrets.secret.env
+      - cloudflare-secrets.env.secret
   - name: cloudflare-secrets
     namespace: external-dns
     behavior: replace
     options:
       disableNameSuffixHash: true
     envs:
-      - cloudflare-secrets.secret.env
+      - cloudflare-secrets.env.secret
   - name: client-info-secret
     namespace: synology-csi
     behavior: replace
@@ -59,3 +74,28 @@ secretGenerator:
     behavior: merge
     envs:
       - qbittorrent.env.secret
+  - name: influxdb-core-secrets
+    namespace: influxdb
+    behavior: merge
+    envs:
+      - influxdb-core-secrets.env.secret
+  - name: grafana-datasource-secrets
+    namespace: grafana
+    behavior: merge
+    envs:
+      - grafana-datasource-secrets.env.secret
+  - name: telegraf-secrets
+    namespace: influxdb
+    behavior: merge
+    envs:
+      - ./telegraf-secrets.env.secret
+  - name: nanomq-secrets
+    namespace: nanomq
+    behavior: replace
+    files:
+      - ./nanomq_pwd.conf.secret
+  - name: nanomq-environment-secrets
+    namespace: nanomq
+    behavior: merge
+    files:
+      - ./nanomq.env.secret

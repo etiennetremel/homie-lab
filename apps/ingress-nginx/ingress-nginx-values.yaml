@@ -1,0 +1,10 @@
+controller:
+  extraArgs:
+    default-ssl-certificate: cert-manager/wildcard-certificate
+    tcp-services-configmap: ingress-nginx/ingress-nginx-tcp
+  service:
+    externalIPs:
+      - 192.168.94.254
+
+tcp:
+  8883: nanomq/nanomq:8883

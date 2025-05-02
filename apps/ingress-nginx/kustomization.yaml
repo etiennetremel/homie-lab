@@ -2,16 +2,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
+  - namespace.yaml
 
-patches:
-  - path: service.patch.yaml
-  - target:
-      group: apps
-      version: v1
-      kind: Deployment
-      name: ingress-nginx-controller
-    patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: --default-ssl-certificate=cert-manager/wildcard-certificate
+helmCharts:
+  - name: ingress-nginx
+    repo: https://kubernetes.github.io/ingress-nginx
+    version: 4.12.1
+    releaseName: ingress-nginx
+    namespace: ingress-nginx
+    valuesFile: ingress-nginx-values.yaml

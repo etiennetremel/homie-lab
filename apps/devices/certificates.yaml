@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: esp32
+spec:
+  isCA: false
+  commonName: esp32
+  secretName: esp32
+  issuerRef:
+    name: selfsigned-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  duration: 87600h # 10 years
+  renewBefore: 360h # 15d
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  usages:
+    - digital signature
+    - key encipherment
+    - client auth

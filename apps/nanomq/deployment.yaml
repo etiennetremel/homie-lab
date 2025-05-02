@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nanomq
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: nanomq
+      containers:
+        - name: nanomq
+          image: emqx/nanomq:0.23.6-slim
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: mqtt
+              containerPort: 1883
+              protocol: TCP
+            - name: mqtts
+              containerPort: 8883
+              protocol: TCP
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+            - name: ws
+              containerPort: 8083
+              protocol: TCP
+            - name: wss
+              containerPort: 8084
+              protocol: TCP
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 128Mi
+          envFrom:
+            - secretRef:
+                name: nanomq-environment-secrets
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            exec:
+              command: ["/etc/nanomq-healthcheck.sh"]
+          readinessProbe:
+            exec:
+              command: ["/etc/nanomq-healthcheck.sh"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nanomq.conf
+              subPath: nanomq.conf
+            - name: config
+              mountPath: /etc/nanomq_acl.conf
+              subPath: nanomq_acl.conf
+            - name: healthcheck-script
+              mountPath: /etc/nanomq-healthcheck.sh
+              subPath: nanomq-healthcheck.sh
+            - name: secrets
+              mountPath: /etc/nanomq_pwd.conf
+              subPath: nanomq_pwd.conf
+            - name: certs
+              mountPath: /etc/certs/nanomq
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      volumes:
+        - name: config
+          configMap:
+            name: nanomq-config
+        - name: healthcheck-script
+          configMap:
+            name: nanomq-healthcheck-script
+            defaultMode: 0110
+        - name: secrets
+          secret:
+            secretName: nanomq-secrets
+        - name: certs
+          secret:
+            secretName: nanomq-certs

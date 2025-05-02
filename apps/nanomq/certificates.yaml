@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nanomq
+spec:
+  isCA: false
+  commonName: nanomq.homie.kogusenn.com
+  dnsNames:
+    - nanomq.homie.kogusenn.com
+  secretName: nanomq-certs
+  issuerRef:
+    name: selfsigned-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth

@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - certificates.yaml
+  - deployment.yaml
+  - namespace.yaml
+  - service.yaml
+  - serviceaccount.yaml
+
+namespace: nanomq
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app: nanomq
+
+configMapGenerator:
+  - name: nanomq-config
+    files:
+      - nanomq.conf
+      - nanomq_acl.conf
+      - nanomq-healthcheck.sh
+  - name: nanomq-healthcheck-script
+    files:
+      - nanomq-healthcheck.sh
+
+secretGenerator:
+  - name: nanomq-secrets
+    files:
+      - ./nanomq_pwd.conf
+  - name: nanomq-environment-secrets
+    envs:
+      - ./nanomq.env

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegraf
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    spec:
+      serviceAccountName: telegraf
+      containers:
+        - name: telegraf
+          image: telegraf:1.32.3-alpine
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: telegraf-secrets
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 100
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: config
+              mountPath: /etc/telegraf/
+            - name: certs
+              mountPath: /etc/certs/telegraf
+      volumes:
+        - name: config
+          configMap:
+            name: telegraf-config
+        - name: certs
+          secret:
+            secretName: telegraf-certs

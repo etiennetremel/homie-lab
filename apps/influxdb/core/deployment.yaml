@@ -48,6 +48,12 @@ spec:
             runAsNonRoot: true
             runAsUser: 1500
             runAsGroup: 1500
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - name: data
               mountPath: /data

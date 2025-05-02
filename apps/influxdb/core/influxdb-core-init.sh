@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+# This script create a database in InfluxDB if it doesn't already exist.
 
 INFLUXDB_HOST=http://influxdb-core
-INFLUXDB_DATABASE=default
+INFLUXDB_DATABASE=sensors
 
 set -e
 

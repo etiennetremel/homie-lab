@@ -6,6 +6,9 @@ A single node Kubernetes cluster setup on an Asus NUC 13 Pro i7 with the
 following stack:
 
 - cert-manager (LetsEncrypt)
+- grafana
+- nanomq
+- influxdb (core v3 + explorer + telegraf)
 - external-dns
 - homeassistant
 - ingress-nginx
@@ -119,3 +122,21 @@ talosctl upgrade-k8s \
 Make sure the VPN is not leaking your IP by downloading the IP Leak torrent
 magnet from https://ipleak.net.
 The IP will be disclosed in the description.
+
+## Home sensors
+
+The home contains various ESP32 DevKit v1 based sensors (BME280, SCD30, SDS011,
+etc.), which measure various metrics such as temperature, humidity and
+pressure.
+
+Measurements are sent to NanoMQ using the MQTTv5 protocol over TLS. Telegraf
+then subscribe to the sensors topics and store the metrics into InfluxDB.
+Grafana is used for dashboarding.
+
+For more information regarding the ESP32 implementation, refer to the
+[etiennetremel/esp32-home-sensor][esp32] repository.
+
+![Grafana dashboard](./grafana-weather-dashboard.png)
+
+<!-- page links -->
+[esp32]: https://github.com/etiennetremel/esp32-home-sensor

@@ -11,6 +11,8 @@ following stack:
 - influxdb (core v3 + explorer + telegraf)
 - external-dns
 - homeassistant
+- otaflux
+- kubernetes-replicator
 - ingress-nginx
 - jackett
 - qbittorrent + gluetun VPN
@@ -24,10 +26,10 @@ following stack:
 ### 1. Prepare secure boot image to start Talos on the machine (OSX)
 
 ```bash
-# following image has secureboot enabled and include btrfs, iscsi-tools,
-# mei, intel-i915-ucode and intel-ucode extensions.
+# following image has secureboot enabled, include btrfs, iscsi-tools, mei,
+# i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.9.5/metal-amd64-secureboot.iso
+wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.10.1/metal-amd64-secureboot.iso
 
 hdiutil convert -format UDRW -o metal-amd64-secureboot.img metal-amd64-secureboot.iso
 mv metal-amd64-secureboot.img{.dmg,}
@@ -44,10 +46,10 @@ diskutil eject /dev/disk3
 ### 2. Prepare Kubernetes cluster
 
 ```bash
-# following image has secureboot enabled and include btrfs, iscsi-tools,
-# mei, i915 and intel-ucode extensions.
+# following image has secureboot enabled, include btrfs, iscsi-tools, mei,
+# i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.9.5
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.10.1
 
 export MACHINE_IP=192.168.94.254
 
@@ -85,10 +87,10 @@ ContainerCreating state for a while depending on the disk size.
 ### Talos upgrade
 
 ```bash
-# following image has secureboot enabled and include btrfs, iscsi-tools,
-# mei, i915 and intel-ucode extensions.
+# following image has secureboot enabled, include btrfs, iscsi-tools, mei,
+# i915 and intel-ucode extensions.
 # https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.9.5
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.10.1
 
 export MACHINE_IP=192.168.94.254
 
@@ -109,7 +111,7 @@ talosctl apply-config \
 
 ```bash
 export MACHINE_IP=192.168.94.254
-export KUBERNETES_VERSION=1.31.7
+export KUBERNETES_VERSION=1.33.0
 
 talosctl upgrade-k8s \
   -n "$MACHINE_IP" \

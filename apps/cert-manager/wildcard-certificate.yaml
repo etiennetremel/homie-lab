@@ -12,3 +12,6 @@ spec:
     name: letsencrypt-staging
     kind: ClusterIssuer
     group: cert-manager.io
+  secretTemplate:
+    annotations:
+      replicator.v1.mittwald.de/replicate-to: "harbor"

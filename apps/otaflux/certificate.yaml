@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: nanomq
+  name: otaflux
 spec:
   isCA: false
   commonName: PLACEHOLDER
   dnsNames:
     - PLACEHOLDER
-  secretName: nanomq-certs
+  secretName: otaflux-certs
   issuerRef:
     name: selfsigned-ca-issuer
     kind: ClusterIssuer

@@ -5,4 +5,4 @@ namespace: devices
 
 resources:
   - namespace.yaml
-  - certificates.yaml
+  - esp32.yaml

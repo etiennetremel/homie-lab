@@ -4,7 +4,7 @@ metadata:
   name: jellyfin
 spec:
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     spec:
       serviceAccountName: jellyfin

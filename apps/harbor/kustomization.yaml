@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+
+namespace: harbor
+
+helmCharts:
+  - name: harbor
+    repo: https://helm.goharbor.io
+    version: 1.17.0
+    releaseName: harbor
+    namespace: harbor
+    valuesFile: harbor-values.yaml

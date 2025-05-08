@@ -1,0 +1,48 @@
+expose:
+  ingress:
+    hosts:
+      core: PLACEHOLDER
+    className: nginx
+  tls:
+    enabled: true
+    certSource: secret
+    secret:
+      secretName: wildcard-certificate
+
+externalURL: PLACEHOLDER
+
+persistence:
+  enabled: true
+  persistentVolumeClaim:
+    registry:
+      storageClass: syno-storage
+      accessMode: ReadWriteOnce
+      size: 5Gi
+    database:
+      storageClass: syno-storage
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    jobservice:
+      jobLog:
+        storageClass: syno-storage
+        accessMode: ReadWriteOnce
+        size: 1Gi
+    redis:
+      storageClass: syno-storage
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    trivy:
+      storageClass: syno-storage
+      accessMode: ReadWriteOnce
+      size: 5Gi
+
+harbor:
+  registry:
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+
+ipFamily:
+  ipv6:
+    enabled: false

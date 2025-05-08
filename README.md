@@ -7,12 +7,12 @@ following stack:
 
 - cert-manager (LetsEncrypt)
 - grafana
-- nanomq
+- nanomq (MQTT broker for IoT devices)
 - influxdb (core v3 + explorer + telegraf)
 - external-dns
 - homeassistant
-- otaflux
-- kubernetes-replicator
+- otaflux (server new firmware to IoT devices)
+- kubernetes-replicator (replicate secrets across namespaces)
 - ingress-nginx
 - jackett
 - qbittorrent + gluetun VPN

@@ -11,5 +11,6 @@ configMapGenerator:
     files:
       - ./weather-dashboard.json
     options:
+      disableNameSuffixHash: true
       annotations:
         k8s-sidecar-target-directory: /tmp/dashboards/weather

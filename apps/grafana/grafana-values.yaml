@@ -9,7 +9,34 @@ grafana.ini:
     enabled: true
 
 envFromSecrets:
-  - name: grafana-datasource-secrets
+  - name: grafana-secrets
+
+alerting:
+  policies.yaml:
+    apiVersion: 1
+    policies:
+      - orgId: 1
+        receiver: telegram
+        group_by:
+          - grafana_folder
+          - alertname
+  contactpoints.yaml:
+    secret:
+      apiVersion: 1
+      contactPoints:
+        - orgId: 1
+          name: telegram
+          receivers:
+            - uid: telegram
+              type: telegram
+              settings:
+                bottoken: ${TELEGRAM_TOKEN}
+                chatid: '-4854616166'
+                disable_notification: false
+                disable_web_page_preview: false
+                protect_content: false
+                parse_mode: HTML
+              disableResolveMessage: false
 
 datasources:
   datasources.yaml:
@@ -39,12 +66,11 @@ sidecar:
     searchNamespace: grafana
     provider:
       allowUiUpdates: false
-    resources:
-      limits:
-        memory: 64Mi
-      requests:
-        cpu: 10m
-        memory: 64Mi
+  alerts:
+    enabled: true
+    label: grafana_alert
+    labelValue: "1"
+    searchNamespace: grafana
 
 testFramework:
   enabled: false

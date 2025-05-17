@@ -4,14 +4,15 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - dashboards/
+  - alerts/
 
 namespace: grafana
 
 secretGenerator:
-  - name: grafana-datasource-secrets
+  - name: grafana-secrets
     namespace: grafana
     envs:
-      - ./grafana-datasource-secrets.env
+      - ./grafana-secrets.env
 
 helmCharts:
   - name: grafana

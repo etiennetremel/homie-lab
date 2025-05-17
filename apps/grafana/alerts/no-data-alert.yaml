@@ -1,0 +1,351 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: Every Minute
+    folder: Homie
+    interval: 1m
+    rules:
+      - uid: living-room-sensor
+        title: No data received from living-room sensor in the last 5 minutes
+        condition: B
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: influxdb
+            model:
+              dataset: iox
+              editorMode: code
+              format: table
+              intervalMs: 1000
+              maxDataPoints: 43200
+              rawQuery: true
+              rawSql: |-
+                SELECT COUNT("temperature")
+                FROM "weather"
+                WHERE "time" >= $__timeFrom
+                AND "time" <= $__timeTo
+                AND "location" = 'living-room'
+              refId: A
+              sql:
+                columns:
+                  - parameters:
+                      - name: temperature
+                        type: functionParameter
+                    type: function
+                groupBy:
+                  - property:
+                      type: string
+                    type: groupBy
+                whereJsonTree:
+                  children1:
+                    - id: a99baa8a-cdef-4012-b456-7196dd91660d
+                      properties:
+                        field: location
+                        fieldSrc: field
+                        operator: equal
+                        value:
+                          - living-room
+                        valueError:
+                          - null
+                        valueSrc:
+                          - value
+                        valueType:
+                          - text
+                      type: rule
+                  id: 89b89989-0123-4456-b89a-b196dd7b2423
+                  type: group
+                whereString: location = 'living-room'
+              table: weather
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+        noDataState: Alerting
+        execErrState: Error
+        for: 1m
+        annotations:
+          summary: No data received from living-room sensor for the past 5 minutes
+        isPaused: false
+        notification_settings:
+          receiver: telegram
+      - uid: main-bedroom-sensor
+        title: No data received from main-bedroom sensor in the last 5 minutes
+        condition: B
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: influxdb
+            model:
+              dataset: iox
+              editorMode: code
+              format: table
+              intervalMs: 1000
+              maxDataPoints: 43200
+              rawQuery: true
+              rawSql: |-
+                SELECT COUNT("temperature")
+                FROM "weather"
+                WHERE "time" >= $__timeFrom
+                AND "time" <= $__timeTo
+                AND "location" = 'main-bedroom'
+              refId: A
+              sql:
+                columns:
+                  - parameters:
+                      - name: temperature
+                        type: functionParameter
+                    type: function
+                groupBy:
+                  - property:
+                      type: string
+                    type: groupBy
+                whereJsonTree:
+                  children1:
+                    - id: a99baa8a-cdef-4012-b456-7196dd91660d
+                      properties:
+                        field: location
+                        fieldSrc: field
+                        operator: equal
+                        value:
+                          - main-bedroom
+                        valueError:
+                          - null
+                        valueSrc:
+                          - value
+                        valueType:
+                          - text
+                      type: rule
+                  id: 89b89989-0123-4456-b89a-b196dd7b2423
+                  type: group
+                whereString: location = 'main-bedroom'
+              table: weather
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+        noDataState: Alerting
+        execErrState: Error
+        for: 1m
+        annotations:
+          summary: No data received from main-bedroom sensor for the past 5 minutes
+        isPaused: false
+        notification_settings:
+          receiver: telegram
+      - uid: office-sensor
+        title: No data received from office sensor in the last 5 minutes
+        condition: B
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: influxdb
+            model:
+              dataset: iox
+              editorMode: code
+              format: table
+              intervalMs: 1000
+              maxDataPoints: 43200
+              rawQuery: true
+              rawSql: |-
+                SELECT COUNT("temperature")
+                FROM "weather"
+                WHERE "time" >= $__timeFrom
+                AND "time" <= $__timeTo
+                AND "location" = 'office'
+              refId: A
+              sql:
+                columns:
+                  - parameters:
+                      - name: temperature
+                        type: functionParameter
+                    type: function
+                groupBy:
+                  - property:
+                      type: string
+                    type: groupBy
+                whereJsonTree:
+                  children1:
+                    - id: a99baa8a-cdef-4012-b456-7196dd91660d
+                      properties:
+                        field: location
+                        fieldSrc: field
+                        operator: equal
+                        value:
+                          - office
+                        valueError:
+                          - null
+                        valueSrc:
+                          - value
+                        valueType:
+                          - text
+                      type: rule
+                  id: 89b89989-0123-4456-b89a-b196dd7b2423
+                  type: group
+                whereString: location = 'office'
+              table: weather
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+        noDataState: Alerting
+        execErrState: Error
+        for: 1m
+        annotations:
+          summary: No data received from office sensor for the past 5 minutes
+        isPaused: false
+        notification_settings:
+          receiver: telegram
+      - uid: outdoor-sensor
+        title: No data received from outdoor sensor in the last 5 minutes
+        condition: B
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: influxdb
+            model:
+              dataset: iox
+              editorMode: code
+              format: table
+              intervalMs: 1000
+              maxDataPoints: 43200
+              rawQuery: true
+              rawSql: |-
+                SELECT COUNT("temperature")
+                FROM "weather"
+                WHERE "time" >= $__timeFrom
+                AND "time" <= $__timeTo
+                AND "location" = 'outdoor'
+              refId: A
+              sql:
+                columns:
+                  - parameters:
+                      - name: temperature
+                        type: functionParameter
+                    type: function
+                groupBy:
+                  - property:
+                      type: string
+                    type: groupBy
+                whereJsonTree:
+                  children1:
+                    - id: a99baa8a-cdef-4012-b456-7196dd91660d
+                      properties:
+                        field: location
+                        fieldSrc: field
+                        operator: equal
+                        value:
+                          - outdoor
+                        valueError:
+                          - null
+                        valueSrc:
+                          - value
+                        valueType:
+                          - text
+                      type: rule
+                  id: 89b89989-0123-4456-b89a-b196dd7b2423
+                  type: group
+                whereString: location = 'outdoor'
+              table: weather
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: threshold
+        noDataState: Alerting
+        execErrState: Error
+        for: 1m
+        annotations:
+          summary: No data received from outdoor sensor for the past 5 minutes
+        isPaused: false
+        notification_settings:
+          receiver: telegram

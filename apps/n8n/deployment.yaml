@@ -17,7 +17,7 @@ spec:
               name: data
       containers:
         - name: n8n
-          image: docker.n8n.io/n8nio/n8n:1.93.0
+          image: docker.n8n.io/n8nio/n8n:1.94.0
           imagePullPolicy: IfNotPresent
           env:
             - name: N8N_HIRING_BANNER_ENABLED

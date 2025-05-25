@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: otaflux
+spec:
+  parentRefs:
+    - name: eg
+      sectionName: https
+      namespace: gateway
+  hostnames:
+    - otaflux.homie.e10n.me
+  rules:
+    - backendRefs:
+        - name: otaflux
+          namespace: otaflux
+          port: 80

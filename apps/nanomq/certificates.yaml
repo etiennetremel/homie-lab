@@ -4,9 +4,9 @@ metadata:
   name: nanomq
 spec:
   isCA: false
-  commonName: PLACEHOLDER
+  commonName: nanomq.homie.e10n.me
   dnsNames:
-    - PLACEHOLDER
+    - nanomq.homie.e10n.me
   secretName: nanomq-certs
   issuerRef:
     name: selfsigned-ca-issuer

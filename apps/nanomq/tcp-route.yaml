@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: nanomq-mqtts
+spec:
+  parentRefs:
+    - name: nanomq
+      sectionName: mqtts
+      namespace: gateway
+  rules:
+    - backendRefs:
+        - name: nanomq
+          namespace: nanomq
+          port: 8883

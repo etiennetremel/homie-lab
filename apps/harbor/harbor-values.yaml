@@ -1,15 +1,12 @@
 expose:
-  ingress:
-    hosts:
-      core: PLACEHOLDER
-    className: nginx
+  type: clusterIP
   tls:
     enabled: true
     certSource: secret
     secret:
       secretName: wildcard-certificate
 
-externalURL: PLACEHOLDER
+externalURL: https://harbor.homie.e10n.me
 
 persistence:
   enabled: true

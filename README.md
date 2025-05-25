@@ -2,24 +2,31 @@
 
 ## Overview
 
-A single node Kubernetes cluster setup on an Asus NUC 13 Pro i7 with the
-following stack:
+A single node Kubernetes cluster setup with Talos on an Asus NUC 13 Pro i7 with
+the following stack installed:
 
 - cert-manager (LetsEncrypt)
-- grafana
-- nanomq (MQTT broker for IoT devices)
-- influxdb (core v3 + explorer + telegraf)
+- envoy gateway
 - external-dns
+- grafana
 - homeassistant
-- otaflux (server new firmware to IoT devices)
-- kubernetes-replicator (replicate secrets across namespaces)
-- ingress-nginx
+- influxdb (core v3 + explorer + telegraf)
 - jackett
+- kubernetes-replicator (replicate secrets across namespaces, e.g.
+  certificates)
+- nanomq (MQTT broker for IoT devices)
+- otaflux (server new firmware to IoT devices)
 - qbittorrent + gluetun VPN
 - radarr
 - sonarr
 - synology-csi
-- talos (Kubernetes)
+
+Configuration of the following applications still remains in this repository
+but are not being used:
+- homeassistant => replaced by grafana + influxdb + telegraf
+- ingress-nginx => replaced by envoy-gateway
+- mosquitto => replacedd by nanomq
+- n8n => not used
 
 ## Getting started
 
@@ -72,9 +79,23 @@ talosctl -n "$MACHINE_IP" --talosconfig=talosconfig kubeconfig
 
 ### 3. Install cluster apps
 
-Make appropriate patches to ingresses/secrets. Then:
+Make appropriate patches to secrets, certificates and URLs. Then:
 
 ```bash
+# if you install OtaFlux which the chart is hosted on GitHub Container
+# Registry, you will need to authenticate using a PAT token:
+export CR_PAT=TOKEN_WITH_PACKAGES_READ_PERMISSION
+echo $CR_PAT | helm registry login ghcr.io --username "<GITHUB USERNAME>" --password-stdin
+
+# if you are using envoy-gateway, you will need a token to pull from Docker Hub
+# OCI registry
+export DOCKER_PAT=TOKEN_WITH_PUBLIC_REPOSITORY_READ_PERMISSION
+echo $DOCKER_PATH | helm registry login docker.io --username "<DOCKER USERNAME>" --password-stdin
+
+# then this is required to be able to use the local helm credentials from
+# kustomize
+export HELM_REGISTRY_CONFIG="${HOME}/Library/Preferences/helm/registry/config.json"
+
 # apply kubernetes config using Kustomize
 kustomize build --enable-helm clusters/homie | kubectl apply -f -
 ```
@@ -111,7 +132,7 @@ talosctl apply-config \
 
 ```bash
 export MACHINE_IP=192.168.94.254
-export KUBERNETES_VERSION=1.33.0
+export KUBERNETES_VERSION=1.33.1
 
 talosctl upgrade-k8s \
   -n "$MACHINE_IP" \

@@ -5,11 +5,11 @@ metadata:
   namespace: cert-manager
 spec:
   secretName: wildcard-certificate
-  commonName: PLACEHOLDER
+  commonName: '*.homie.e10n.me'
   dnsNames:
-    - PLACEHOLDER
+    - '*.homie.e10n.me'
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
     group: cert-manager.io
   secretTemplate:

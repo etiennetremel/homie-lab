@@ -3,23 +3,25 @@ kind: Kustomization
 
 resources:
   - ../../apps/cert-manager
+  - ../../apps/devices
+  - ../../apps/envoy-gateway
   - ../../apps/external-dns
-  - ../../apps/ingress-nginx
+  - ../../apps/gateway
+  - ../../apps/grafana
+  - ../../apps/harbor
   - ../../apps/influxdb
+  - ../../apps/kubernetes-replicator
+  - ../../apps/nanomq
+  - ../../apps/otaflux
   - ../../apps/synology-csi
   - ../../apps/torrents
-  - ../../apps/grafana
-  - ../../apps/nanomq
-  - ../../apps/devices
-  - ./ingresses.yaml
   ## not being used at this time
-  # - ../../apps/kubernetes-replicator
+  # - ../../apps/ingress-nginx
   # - ../../apps/mosquitto
   # - ../../apps/homeassistant
   # - ../../apps/n8n
 
 patches:
-  - path: ./wildcard-certificate.patch.yaml
   - path: ./letsencrypt.patch.yaml
     target:
       group: cert-manager.io
@@ -32,12 +34,6 @@ patches:
       version: v1
       kind: ClusterIssuer
       name: letsencrypt-staging
-  - path: ./external-dns.patch.yaml
-    target:
-      group: apps
-      version: v1
-      kind: Deployment
-      name: external-dns
 
 secretGenerator:
   - name: cloudflare-secrets
@@ -79,11 +75,11 @@ secretGenerator:
     behavior: merge
     envs:
       - influxdb-core-secrets.env.secret
-  - name: grafana-datasource-secrets
+  - name: grafana-secrets
     namespace: grafana
     behavior: merge
     envs:
-      - grafana-datasource-secrets.env.secret
+      - grafana-secrets.env.secret
   - name: telegraf-secrets
     namespace: influxdb
     behavior: merge
@@ -93,9 +89,19 @@ secretGenerator:
     namespace: nanomq
     behavior: replace
     files:
-      - ./nanomq_pwd.conf.secret
+      - nanomq_pwd.conf=./nanomq_pwd.conf.secret
   - name: nanomq-environment-secrets
     namespace: nanomq
     behavior: merge
-    files:
+    envs:
       - ./nanomq.env.secret
+  - name: otaflux
+    namespace: otaflux
+    behavior: merge
+    envs:
+      - ./otaflux-secrets.env.secret
+  - name: otaflux-cosign-pub-key
+    namespace: otaflux
+    behavior: replace
+    files:
+      - cosign.pub=./cosign.pub.secret

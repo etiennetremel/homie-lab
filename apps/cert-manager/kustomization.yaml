@@ -9,6 +9,7 @@ resources:
   - ./letsencrypt-production.yaml
   - ./wildcard-certificate.yaml
   - ./self-signed-ca.yaml
+  - ./reference-grant.yaml
 
 secretGenerator:
   - name: cloudflare-secrets

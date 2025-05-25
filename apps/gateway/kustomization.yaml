@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./gateway-nanomq.yaml
+  - ./gateway.yaml
+  - ./http-route.yaml
+  - ./namespace.yaml
+
+namespace: gateway

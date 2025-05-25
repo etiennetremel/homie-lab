@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -47,25 +47,26 @@
           "mappings": [
             {
               "options": {
-                "0": {
-                  "color": "red",
-                  "index": 0,
-                  "text": "Offline"
-                }
-              },
-              "type": "value"
-            },
-            {
-              "options": {
                 "from": 1,
                 "result": {
                   "color": "green",
-                  "index": 1,
+                  "index": 0,
                   "text": "Online"
                 },
                 "to": 99
               },
               "type": "range"
+            },
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Offline"
+                }
+              },
+              "type": "special"
             }
           ],
           "thresholds": {
@@ -154,6 +155,111 @@
         "w": 24,
         "x": 0,
         "y": 4
+      },
+      "id": 26,
+      "panels": [],
+      "title": "Sensor firmware version",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "n/a",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^firmware$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.0",
+      "repeat": "location",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "dataset": "iox",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  firmware\nFROM weather\nWHERE time >= now() - INTERVAL '5 minutes' AND location = '$location'\nORDER BY time DESC\nLIMIT 1",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "name": "COUNT",
+                "parameters": [
+                  {
+                    "name": "temperature",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "name": "location",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "weather"
+        }
+      ],
+      "title": "$location",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
       },
       "id": 17,
       "panels": [],
@@ -263,7 +369,7 @@
         "h": 4,
         "w": 8,
         "x": 0,
-        "y": 5
+        "y": 9
       },
       "id": 20,
       "options": {
@@ -347,7 +453,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -376,7 +482,7 @@
         "h": 8,
         "w": 16,
         "x": 8,
-        "y": 5
+        "y": 9
       },
       "id": 18,
       "options": {
@@ -399,7 +505,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT\n  date_bin_gapfill(INTERVAL '1 minute', time) AS time,\n  location,\n  interpolate(AVG(CASE \n    WHEN air_quality_pm10 BETWEEN 0 AND 20 THEN air_quality_pm10 \n    ELSE NULL \n  END)) AS pm10,\n  interpolate(AVG(CASE \n    WHEN air_quality_pm2_5 BETWEEN 0 AND 20 THEN air_quality_pm2_5 \n    ELSE NULL \n  END)) AS pm2_5\nFROM weather\nWHERE\n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\n  AND air_quality_pm2_5 != 0\n  AND air_quality_pm10 != 0\nGROUP BY date_bin_gapfill(INTERVAL '1 minute', time), location\nORDER BY time",
+          "rawSql": "SELECT\n  date_bin_gapfill($__interval, time) AS time,\n  location,\n  AVG(CASE\n    WHEN air_quality_pm10 BETWEEN 0 AND 20 THEN air_quality_pm10\n    ELSE NULL\n  END) AS pm10,\n  AVG(CASE\n    WHEN air_quality_pm2_5 BETWEEN 0 AND 20 THEN air_quality_pm2_5\n    ELSE NULL\n  END) AS pm2_5\nFROM weather\nWHERE\n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\n  AND air_quality_pm2_5 != 0\n  AND air_quality_pm10 != 0\nGROUP BY date_bin_gapfill($__interval, time), location\nORDER BY time",
           "refId": "A",
           "sql": {
             "columns": [
@@ -452,7 +558,7 @@
         "h": 4,
         "w": 8,
         "x": 0,
-        "y": 9
+        "y": 13
       },
       "id": 19,
       "options": {
@@ -508,11 +614,598 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 17
       },
-      "id": 13,
+      "id": 24,
       "panels": [],
-      "title": "Dew point",
+      "title": "Rough barometric forecast estimate",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "description": "Trend:\n- Rising (↑): Improving weather\n- Falling (↓): Rain or storm possible\n- Steady (→): Stable conditions",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": -999,
+                "result": {
+                  "color": "blue",
+                  "index": 0,
+                  "text": "🌧️\nRain or storm possible"
+                },
+                "to": 1
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": -1,
+                "result": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "🌤️\nStable conditions"
+                },
+                "to": 1
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "yellow",
+                  "index": 2,
+                  "text": "☀️\nImproving weather"
+                },
+                "to": 999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 15,
+      "maxPerRow": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 30
+        },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  (SELECT pressure FROM weather WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo ORDER BY time DESC LIMIT 1) -\n  (SELECT pressure FROM weather WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo - INTERVAL '3 hours' ORDER BY time DESC LIMIT 1)\n  AS pressure_delta\nFROM \"weather\" WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo AND \"location\" = 'living-room' ORDER BY time",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 4,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 23,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "degree"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 22
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_bin_gapfill($__interval, time) AS time,\n  location,\n  AVG(CASE\n    WHEN temperature BETWEEN -10 AND 50 THEN temperature\n    ELSE NULL\n  END) AS temperature\nFROM weather\nWHERE\n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\nGROUP BY date_bin_gapfill($__interval, time), location\nORDER BY time",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "time",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "temperature",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": []
+          },
+          "table": "weather"
+        }
+      ],
+      "title": "Temperature",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "temperature (.*)",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 23,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "humidity"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 22
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_bin_gapfill($__interval, time) AS time,\n  location,\n  AVG(CASE\n    WHEN humidity BETWEEN 20 AND 90 THEN humidity\n    ELSE NULL\n  END) AS humidity\nFROM weather\nWHERE\n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\nGROUP BY date_bin_gapfill($__interval, time), location\nORDER BY time",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "time",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "humidity",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": []
+          },
+          "table": "weather"
+        }
+      ],
+      "title": "Humidity",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "humidity (.*)",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 23,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "pressurehpa"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_trend"
+            },
+            "properties": [
+              {
+                "id": "custom.lineWidth",
+                "value": 3
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "smooth"
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 22
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_bin_gapfill($__interval, time) AS time,\n  location,\n  AVG(CASE\n    WHEN pressure BETWEEN 100000 AND 104000 THEN pressure\n    ELSE NULL\n  END) AS pressure\nFROM weather\nWHERE\n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\nGROUP BY date_bin_gapfill($__interval, time), location\nORDER BY time",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "time",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "pressure",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": []
+          },
+          "table": "weather"
+        },
+        {
+          "dataset": "iox",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "influxdb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "WITH binned_data AS (\n  SELECT\n    date_bin_gapfill($__interval, time) AS binned_time,\n    AVG(pressure) AS avg_pressure_for_bin\n  FROM weather\n  WHERE\n    \"time\" >= $__timeFrom\n    AND \"time\" <= $__timeTo\n  GROUP BY binned_time\n)\nSELECT\n  binned_time AS time,\n  AVG(avg_pressure_for_bin) OVER (\n    ORDER BY binned_time\n    ROWS BETWEEN 25 PRECEDING AND CURRENT ROW\n  ) AS pressure_trend\nFROM binned_data\nORDER BY binned_time;",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "Pressure",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "pressure (.*)",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 23,
+      "panels": [],
+      "repeat": "location",
+      "title": "$location",
       "type": "row"
     },
     {
@@ -631,10 +1324,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 3,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 32
       },
       "id": 14,
       "maxPerRow": 4,
@@ -659,15 +1352,13 @@
         "wideLayout": true
       },
       "pluginVersion": "12.0.0",
-      "repeat": "location",
-      "repeatDirection": "h",
       "targets": [
         {
           "dataset": "iox",
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  (temperature - ((100 - humidity) / 5.0)) AS dew_point\nFROM weather\nWHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo\nORDER BY time",
+          "rawSql": "SELECT\n  (temperature - ((100 - humidity) / 5.0)) AS dew_point\nFROM weather\nWHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo AND location = '$location'\nORDER BY time",
           "refId": "A",
           "sql": {
             "columns": [
@@ -687,23 +1378,10 @@
           }
         }
       ],
-      "title": "$location",
+      "title": "Dew Point",
       "type": "stat"
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 17
-      },
-      "id": 4,
-      "panels": [],
-      "title": "Temperature",
-      "type": "row"
-    },
-    {
       "datasource": {
         "type": "influxdb",
         "uid": "influxdb"
@@ -711,144 +1389,49 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 23,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          },
-          "unit": "degree"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 18
-      },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.0",
-      "targets": [
-        {
-          "dataset": "iox",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  date_bin_gapfill(INTERVAL '1 minute', time) AS time,\n  location,\n  interpolate(AVG(CASE \n    WHEN temperature BETWEEN -10 AND 50 THEN temperature \n    ELSE NULL \n  END)) AS temperature\nFROM weather\nWHERE\n  \n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\nGROUP BY date_bin_gapfill(INTERVAL '1 minute', time), location\nORDER BY time",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "time",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              },
-              {
-                "parameters": [
-                  {
-                    "name": "temperature",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": []
-          },
-          "table": "weather"
-        }
-      ],
-      "title": "Temperature",
-      "transformations": [
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "temperature (.*)",
-            "renamePattern": "$1"
-          }
-        }
-      ],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-BlYlRd"
+            "mode": "thresholds"
           },
           "fieldMinMax": false,
           "mappings": [],
           "max": 50,
           "min": 0,
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green"
+              },
+              {
+                "color": "purple",
+                "value": -5
+              },
+              {
+                "color": "blue",
+                "value": 0
+              },
+              {
+                "color": "super-light-blue",
+                "value": 10
+              },
+              {
+                "color": "green",
+                "value": 18
+              },
+              {
+                "color": "green",
+                "value": 25
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "orange",
+                "value": 35
+              },
+              {
+                "color": "red",
+                "value": 40
               }
             ]
           },
@@ -857,10 +1440,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 12,
-        "y": 18
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 35
       },
       "id": 3,
       "maxPerRow": 4,
@@ -878,12 +1461,10 @@
           "values": false
         },
         "showPercentChange": true,
-        "textMode": "auto",
+        "textMode": "value",
         "wideLayout": true
       },
       "pluginVersion": "12.0.0",
-      "repeat": "location",
-      "repeatDirection": "h",
       "targets": [
         {
           "dataset": "iox",
@@ -925,7 +1506,214 @@
           "table": "weather"
         }
       ],
-      "title": "${location}",
+      "title": "Temperature",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "green",
+                "value": 35
+              },
+              {
+                "color": "green",
+                "value": 45
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 70
+              }
+            ]
+          },
+          "unit": "humidity"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 35
+      },
+      "id": 16,
+      "maxPerRow": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT humidity\nFROM weather\nWHERE time >= now() - INTERVAL '1 day' AND \"location\" = '$location'\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "humidity",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "weather"
+        }
+      ],
+      "title": "Humidity",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 104000,
+          "min": 100000,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "pressurehpa"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 35
+      },
+      "id": 12,
+      "maxPerRow": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "dataset": "iox",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \"pressure\" FROM \"weather\" WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo AND \"location\" = '$location' ORDER BY time",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "pressure",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ]
+          },
+          "table": "weather"
+        }
+      ],
+      "title": "Pressure",
       "type": "stat"
     },
     {
@@ -955,10 +1743,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 22
+        "h": 3,
+        "w": 8,
+        "x": 0,
+        "y": 39
       },
       "id": 10,
       "options": {
@@ -979,8 +1767,6 @@
         "wideLayout": true
       },
       "pluginVersion": "12.0.0",
-      "repeat": "location",
-      "repeatDirection": "h",
       "targets": [
         {
           "dataset": "iox",
@@ -1022,240 +1808,7 @@
           "table": "weather"
         }
       ],
-      "title": "${location}",
-      "type": "stat"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 27
-      },
-      "id": 5,
-      "panels": [],
-      "title": "Humidity",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 23,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          },
-          "unit": "humidity"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 28
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.0",
-      "targets": [
-        {
-          "dataset": "iox",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  date_bin_gapfill(INTERVAL '1 minute', time) AS time,\n  location,\n  interpolate(AVG(CASE \n    WHEN humidity BETWEEN 20 AND 90 THEN humidity \n    ELSE NULL \n  END)) AS humidity\nFROM weather\nWHERE\n  \n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\nGROUP BY date_bin_gapfill(INTERVAL '1 minute', time), location\nORDER BY time",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "time",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              },
-              {
-                "parameters": [
-                  {
-                    "name": "humidity",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": []
-          },
-          "table": "weather"
-        }
-      ],
-      "title": "Humidity",
-      "transformations": [
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "humidity (.*)",
-            "renamePattern": "$1"
-          }
-        }
-      ],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-YlBl"
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "humidity"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 28
-      },
-      "id": 16,
-      "maxPerRow": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.0",
-      "repeat": "location",
-      "repeatDirection": "h",
-      "targets": [
-        {
-          "dataset": "iox",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  MAX(humidity) AS max,\n  MIN(humidity) AS min\nFROM weather\nWHERE time >= now() - INTERVAL '1 day' AND \"location\" = '$location'\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "humidity",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ]
-          },
-          "table": "weather"
-        }
-      ],
-      "title": "${location}",
+      "title": "",
       "type": "stat"
     },
     {
@@ -1298,10 +1851,10 @@
         ]
       },
       "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 31
+        "h": 3,
+        "w": 8,
+        "x": 8,
+        "y": 39
       },
       "id": 11,
       "maxPerRow": 4,
@@ -1323,8 +1876,6 @@
         "wideLayout": true
       },
       "pluginVersion": "12.0.0",
-      "repeat": "location",
-      "repeatDirection": "h",
       "targets": [
         {
           "dataset": "iox",
@@ -1357,21 +1908,8 @@
           "table": "weather"
         }
       ],
-      "title": "${location}",
+      "title": "",
       "type": "stat"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 37
-      },
-      "id": 7,
-      "panels": [],
-      "title": "Pressure",
-      "type": "row"
     },
     {
       "datasource": {
@@ -1381,42 +1919,12 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-YlBl"
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 23,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
+          "fieldMinMax": false,
           "mappings": [],
+          "max": 104000,
+          "min": 100000,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1426,379 +1934,14 @@
             ]
           },
           "unit": "pressurehpa"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "pressure_trend"
-            },
-            "properties": [
-              {
-                "id": "custom.lineWidth",
-                "value": 3
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 0
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.lineInterpolation",
-                "value": "smooth"
-              },
-              {
-                "id": "custom.showPoints",
-                "value": "always"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 38
-      },
-      "id": 8,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.0",
-      "targets": [
-        {
-          "dataset": "iox",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  date_bin_gapfill(INTERVAL '1 minute', time) AS time,\n  location,\n  interpolate(AVG(CASE \n    WHEN pressure BETWEEN 100000 AND 104000 THEN pressure \n    ELSE NULL \n  END)) AS pressure\nFROM weather\nWHERE\n  \n  (\n    '${location:csv}' = 'All' OR POSITION(location IN '${location:csv}') > 0\n  )\n  AND \"time\" >= $__timeFrom\n  AND \"time\" <= $__timeTo\nGROUP BY date_bin_gapfill(INTERVAL '1 minute', time), location\nORDER BY time",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "time",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              },
-              {
-                "parameters": [
-                  {
-                    "name": "pressure",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": []
-          },
-          "table": "weather"
-        },
-        {
-          "dataset": "iox",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "influxdb"
-          },
-          "editorMode": "code",
-          "format": "time_series",
-          "hide": false,
-          "rawQuery": true,
-          "rawSql": "SELECT\n  date_bin_gapfill(INTERVAL '1 hour', time) AS time,\n  AVG(pressure) +\n    CASE\n      WHEN MAX(pressure) - MIN(pressure) > 1 THEN 1\n      WHEN MAX(pressure) - MIN(pressure) < -1 THEN -1\n      ELSE 0\n    END AS pressure_trend\nFROM weather\nWHERE\n  time >= $__timeFrom AND time <= now() + INTERVAL '1 hour'\nGROUP BY date_bin_gapfill(INTERVAL '1 hour', time)\nORDER BY time\n",
-          "refId": "B",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ]
-          }
-        }
-      ],
-      "title": "Pressure",
-      "transformations": [
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "pressure (.*)",
-            "renamePattern": "$1"
-          }
-        }
-      ],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "description": "Trend:\n- Rising (↑): Improving weather\n- Falling (↓): Rain or storm possible\n- Steady (→): Stable conditions",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "from": -999,
-                "result": {
-                  "color": "blue",
-                  "index": 0,
-                  "text": "🌧️\nRain or storm possible"
-                },
-                "to": 1
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": -1,
-                "result": {
-                  "color": "green",
-                  "index": 1,
-                  "text": "🌤️\nStable conditions"
-                },
-                "to": 1
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 1,
-                "result": {
-                  "color": "yellow",
-                  "index": 2,
-                  "text": "☀️\nImproving weather"
-                },
-                "to": 999
-              },
-              "type": "range"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
         },
         "overrides": []
       },
       "gridPos": {
         "h": 3,
-        "w": 12,
-        "x": 12,
-        "y": 38
-      },
-      "id": 15,
-      "maxPerRow": 3,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {
-          "valueSize": 30
-        },
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.0",
-      "targets": [
-        {
-          "dataset": "iox",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  (SELECT pressure FROM weather WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo ORDER BY time DESC LIMIT 1) -\n  (SELECT pressure FROM weather WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo - INTERVAL '3 hours' ORDER BY time DESC LIMIT 1)\n  AS pressure_delta\nFROM \"weather\" WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo AND \"location\" = 'living-room' ORDER BY time",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ]
-          }
-        }
-      ],
-      "title": "Rough barometric forecast estimate",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-YlBl"
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "max": 104000,
-          "min": 100000,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          },
-          "unit": "pressurehpa"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 41
-      },
-      "id": 12,
-      "maxPerRow": 4,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.0",
-      "repeat": "location",
-      "repeatDirection": "h",
-      "targets": [
-        {
-          "dataset": "iox",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \"pressure\" FROM \"weather\" WHERE \"time\" >= $__timeFrom AND \"time\" <= $__timeTo AND \"location\" = '$location' ORDER BY time",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "pressure",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ]
-          },
-          "table": "weather"
-        }
-      ],
-      "title": "${location}",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "influxdb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-YlBl"
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "max": 104000,
-          "min": 100000,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          },
-          "unit": "pressurehpa"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 44
+        "w": 8,
+        "x": 16,
+        "y": 39
       },
       "id": 9,
       "maxPerRow": 4,
@@ -1820,8 +1963,6 @@
         "wideLayout": true
       },
       "pluginVersion": "12.0.0",
-      "repeat": "location",
-      "repeatDirection": "h",
       "targets": [
         {
           "dataset": "iox",
@@ -1854,7 +1995,7 @@
           "table": "weather"
         }
       ],
-      "title": "${location}",
+      "title": "",
       "type": "stat"
     }
   ],

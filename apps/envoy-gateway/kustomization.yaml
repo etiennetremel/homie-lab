@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - gateway-class.yaml
+  # Helm Charst Inflator doesn't seem to apply the CRDs
+  - https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+  # - ./reference-grant.yaml
+
+namespace: envoy-gateway-system
+
+helmCharts:
+  - name: gateway-helm
+    repo: oci://docker.io/envoyproxy
+    version: v0.0.0-latest
+    releaseName: envoy-gateway
+    namespace: envoy-gateway-system
+    valuesFile: envoy-gateway-values.yaml

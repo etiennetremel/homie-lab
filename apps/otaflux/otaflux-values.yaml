@@ -1,0 +1,34 @@
+otaflux:
+  registryUrl: harbor.example.com:443
+  registryUsername: PLACEHOLDER
+  registryPassword: PLACEHOLDER
+  repositoryPrefix: PLACEHOLDER
+  logLevel: info
+  cosignPubKey: PLACEHOLDER
+
+ingress:
+  enabled: false
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: otaflux/otaflux-certs
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "false"
+  hosts:
+    - host: otaflux.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - otaflux.example.com
+      secretName: otaflux-certs
+
+
+resources:
+  limits:
+    memory: 128Mi
+  requests:
+    cpu: 10m
+    memory: 128Mi

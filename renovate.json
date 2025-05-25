@@ -16,6 +16,12 @@
     "datasourceTemplate": "github-tags",
     "versioningTemplate": "semver"
   }],
+  "ignorePaths": [
+    "apps/homeassistant",
+    "apps/ingress-nginx",
+    "apps/mosquitto",
+    "apps/n8n"
+  ],
   "packageRules": [{
     "matchDatasources": ["github-tags"],
     "versionCompatibility": "^((?<compatibility>.*)-)?(?<version>.*)$",

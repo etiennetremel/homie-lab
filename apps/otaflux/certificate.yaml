@@ -4,9 +4,9 @@ metadata:
   name: otaflux
 spec:
   isCA: false
-  commonName: PLACEHOLDER
+  commonName: otaflux.homie.e10n.me
   dnsNames:
-    - PLACEHOLDER
+    - otaflux.homie.e10n.me
   secretName: otaflux-certs
   issuerRef:
     name: selfsigned-ca-issuer

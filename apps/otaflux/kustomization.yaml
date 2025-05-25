@@ -3,10 +3,10 @@ kind: Kustomization
 
 resources:
   - certificate.yaml
-  - deployment.yaml
+  - http-route.yaml
   - namespace.yaml
-  - service.yaml
-  - serviceaccount.yaml
+  - reference-grant-certs.yaml
+  - reference-grant-service.yaml
 
 namespace: otaflux
 
@@ -15,7 +15,10 @@ labels:
     pairs:
       app: otaflux
 
-secretGenerator:
-  - name: otaflux-secrets
-    envs:
-      - ./otaflux-secrets.env
+helmCharts:
+  - name: otaflux
+    repo: oci://ghcr.io/etiennetremel/helm-charts
+    version: v0.1.2
+    releaseName: otaflux
+    namespace: otaflux
+    valuesFile: otaflux-values.yaml

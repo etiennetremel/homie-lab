@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana
+spec:
+  parentRefs:
+    - name: eg
+      sectionName: https
+      namespace: gateway
+  hostnames:
+    - grafana.homie.e10n.me
+  rules:
+    - backendRefs:
+        - name: grafana
+          namespace: grafana
+          port: 80

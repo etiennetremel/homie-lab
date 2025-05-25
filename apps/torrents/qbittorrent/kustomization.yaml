@@ -3,7 +3,9 @@ kind: Kustomization
 
 resources:
   - deployment.yaml
+  - http-route.yaml
   - pvc.yaml
+  - reference-grant.yaml
   - service.yaml
   - serviceaccount.yaml
 

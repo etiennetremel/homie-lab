@@ -8,11 +8,6 @@ resources:
   - service.yaml
   - serviceaccount.yaml
 
-secretGenerator:
-  - name: influxdb-core-secrets
-    envs:
-      - ./influxdb-core-secrets.env
-
 configMapGenerator:
   - name: influxdb-core-init
     files:

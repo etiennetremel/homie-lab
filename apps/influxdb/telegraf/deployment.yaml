@@ -15,6 +15,8 @@ spec:
           envFrom:
             - secretRef:
                 name: telegraf-secrets
+            - secretRef:
+                name: influxdb-admin-token
           securityContext:
             runAsNonRoot: true
             runAsUser: 100
@@ -28,12 +30,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/telegraf/
-            - name: certs
-              mountPath: /etc/certs/telegraf
       volumes:
         - name: config
           configMap:
             name: telegraf-config
-        - name: certs
-          secret:
-            secretName: telegraf-certs

@@ -70,11 +70,6 @@ secretGenerator:
     behavior: merge
     envs:
       - qbittorrent.env.secret
-  - name: influxdb-core-secrets
-    namespace: influxdb
-    behavior: merge
-    envs:
-      - influxdb-core-secrets.env.secret
   - name: grafana-secrets
     namespace: grafana
     behavior: merge

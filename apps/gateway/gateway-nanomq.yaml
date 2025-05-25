@@ -13,4 +13,4 @@ spec:
       port: 8883
       allowedRoutes:
         namespaces:
-          from: Same
+          from: All

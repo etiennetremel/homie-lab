@@ -29,21 +29,36 @@ spec:
             - --data-dir=/data
           envFrom:
             - secretRef:
-                name: influxdb-core-secrets
+                name: influxdb-admin-token
+                optional: true
           livenessProbe:
             exec:
               command:
                 - sh
                 - -c
                 - |
-                  curl -sf -H "Authorization: Bearer $INFLUXDB3_AUTH_TOKEN" http://localhost:8181/health
+                  # influxdb3 health endpoint require authentication so until
+                  # fully initialized with admin token, we assume 401 is ok
+                  if [ -n "$INFLUXDB3_AUTH_TOKEN" ]; then
+                    curl -sf -H "Authorization: Bearer $INFLUXDB3_AUTH_TOKEN" http://localhost:8181/health
+                  else
+                    code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8181/health)
+                    [ "$code" -eq 401 ]
+                  fi
           readinessProbe:
             exec:
               command:
                 - sh
                 - -c
                 - |
-                  curl -sf -H "Authorization: Bearer $INFLUXDB3_AUTH_TOKEN" http://localhost:8181/health
+                  # influxdb3 health endpoint require authentication so until
+                  # fully initialized with admin token, we assume 401 is ok
+                  if [ -n "$INFLUXDB3_AUTH_TOKEN" ]; then
+                    curl -sf -H "Authorization: Bearer $INFLUXDB3_AUTH_TOKEN" http://localhost:8181/health
+                  else
+                    code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8181/health)
+                    [ "$code" -eq 401 ]
+                  fi
           securityContext:
             runAsNonRoot: true
             runAsUser: 1500

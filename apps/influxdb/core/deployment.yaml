@@ -17,7 +17,7 @@ spec:
               name: data
       containers:
         - name: influxdb-core
-          image: influxdb:3.1.0-core
+          image: influxdb:3.2.0-core
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8181

@@ -11,7 +11,7 @@ namespace: harbor
 helmCharts:
   - name: harbor
     repo: https://helm.goharbor.io
-    version: 1.17.1
+    version: 1.17.2
     releaseName: harbor
     namespace: harbor
     valuesFile: harbor-values.yaml

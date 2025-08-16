@@ -6,6 +6,7 @@ resources:
   - gateway-class.yaml
   # Helm Charst Inflator doesn't seem to apply the CRDs
   - https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+  - https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_backendtrafficpolicies.yaml
   # - ./reference-grant.yaml
 
 namespace: envoy-gateway-system

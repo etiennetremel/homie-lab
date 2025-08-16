@@ -12,6 +12,15 @@ spec:
         - name: fix-perms
           image: busybox
           command: ["sh", "-c", "chown -R 1500:1500 /data"]
+          env:
+            - name: INFLUXDB_KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+            - secretRef:
+                name: influxdb-admin-token
+                optional: true
           volumeMounts:
             - mountPath: /data
               name: data
@@ -27,6 +36,11 @@ spec:
             - --node-id=node0
             - --object-store=file
             - --data-dir=/data
+          env:
+            - name: INFLUXDB_KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           envFrom:
             - secretRef:
                 name: influxdb-admin-token

@@ -14,3 +14,7 @@ spec:
         - name: otaflux
           namespace: otaflux
           port: 80
+      timeouts:
+        # increase default 15s timeout to 10minutes to prevent the connection
+        # to drop while the firmware is being streamed to the devices
+        request: 600s

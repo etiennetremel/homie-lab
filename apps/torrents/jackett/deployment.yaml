@@ -8,15 +8,24 @@ spec:
   template:
     spec:
       serviceAccountName: jackett
+      securityContext:
+        fsGroup: 21
+        fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: jackett
-          image: lscr.io/linuxserver/jackett:0.22.950
+          image: lscr.io/linuxserver/jackett:0.22.2231
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 9117
               protocol: TCP
           env:
+            - name: UMASK_SET
+              value: "022"
+            - name: PUID
+              value: "911"
+            - name: PGID
+              value: "911"
             - name: TZ
               value: "Europe/Amsterdam"
           resources:
@@ -27,14 +36,15 @@ spec:
               memory: 512Mi
           securityContext:
             allowPrivilegeEscalation: false
-            capabilities:
-              add:
-                - SETGID
-                - SETUID
-              drop:
-                - ALL
-            seccompProfile:
-              type: RuntimeDefault
+            runAsUser: 0
+            # capabilities:
+            #   add:
+            #     - SETGID
+            #     - SETUID
+            #   drop:
+            #     - ALL
+            # seccompProfile:
+            #   type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /health

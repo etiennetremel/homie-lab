@@ -6,6 +6,9 @@ otaflux:
   logLevel: info
   cosignPubKey: PLACEHOLDER
 
+image:
+  tag: v0.3.2
+
 ingress:
   enabled: false
   className: nginx

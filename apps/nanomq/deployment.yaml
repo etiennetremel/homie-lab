@@ -10,7 +10,7 @@ spec:
       serviceAccountName: nanomq
       containers:
         - name: nanomq
-          image: emqx/nanomq:0.23.10-slim
+          image: emqx/nanomq:0.24.1-slim
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt

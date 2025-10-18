@@ -13,10 +13,3 @@ patches:
   - path: node.patch.yaml
 
 namespace: synology-csi
-
-configMapGenerator:
-  - name: synology-chroot-override
-    files:
-      - chroot.sh
-    options:
-      disableNameSuffixHash: true

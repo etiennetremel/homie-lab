@@ -19,7 +19,7 @@ secretGenerator:
 helmCharts:
   - name: grafana
     repo: https://grafana.github.io/helm-charts
-    version: 9.4.5
+    version: 10.1.1
     releaseName: grafana
     namespace: grafana
     valuesFile: grafana-values.yaml

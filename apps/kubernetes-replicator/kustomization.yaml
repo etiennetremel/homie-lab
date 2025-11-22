@@ -11,3 +11,25 @@ helmCharts:
     repo: https://helm.mittwald.de
     version: 2.12.1
     releaseName: kubernetes-replicator
+
+# inject namespace until this PR is merged: https://github.com/mittwald/kubernetes-replicator/pull/395
+replacements:
+  - source:
+      kind: Namespace
+      name: kubernetes-replicator
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: Deployment
+          name: kubernetes-replicator
+        fieldPaths:
+          - metadata.namespace
+        options:
+          create: true
+      - select:
+          kind: ServiceAccount
+          name: kubernetes-replicator
+        fieldPaths:
+          - metadata.namespace
+        options:
+          create: true

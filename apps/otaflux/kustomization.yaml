@@ -18,7 +18,6 @@ labels:
 helmCharts:
   - name: otaflux
     repo: oci://ghcr.io/etiennetremel/helm-charts
-    version: v0.1.2
+    version: v0.1.3
     releaseName: otaflux
-    namespace: otaflux
     valuesFile: otaflux-values.yaml

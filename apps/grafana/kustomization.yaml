@@ -12,7 +12,6 @@ namespace: grafana
 
 secretGenerator:
   - name: grafana-secrets
-    namespace: grafana
     envs:
       - ./grafana-secrets.env
 
@@ -21,5 +20,4 @@ helmCharts:
     repo: https://grafana.github.io/helm-charts
     version: 10.1.5
     releaseName: grafana
-    namespace: grafana
     valuesFile: grafana-values.yaml

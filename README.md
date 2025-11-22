@@ -36,7 +36,7 @@ but are not being used:
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.10.6/metal-amd64-secureboot.iso
+wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.11.5/metal-amd64-secureboot.iso
 
 hdiutil convert -format UDRW -o metal-amd64-secureboot.img metal-amd64-secureboot.iso
 mv metal-amd64-secureboot.img{.dmg,}
@@ -56,7 +56,7 @@ diskutil eject /dev/disk3
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.10.6
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.11.5
 
 export MACHINE_IP=192.168.94.254
 
@@ -97,7 +97,7 @@ echo $DOCKER_PATH | helm registry login docker.io --username "<DOCKER USERNAME>"
 export HELM_REGISTRY_CONFIG="${HOME}/Library/Preferences/helm/registry/config.json"
 
 # apply kubernetes config using Kustomize
-kustomize build --enable-helm clusters/homie | kubectl apply -f -
+kustomize build --enable-helm clusters/homie | kubectl apply -f - --server-side=true
 ```
 
 Notes: while formatting the disk on the first run, the associated pod will stay in a
@@ -111,7 +111,7 @@ ContainerCreating state for a while depending on the disk size.
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.10.6
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.11.5 
 
 export MACHINE_IP=192.168.94.254
 
@@ -132,7 +132,7 @@ talosctl apply-config \
 
 ```bash
 export MACHINE_IP=192.168.94.254
-export KUBERNETES_VERSION=1.33.1
+export KUBERNETES_VERSION=1.34.2
 
 talosctl upgrade-k8s \
   -n "$MACHINE_IP" \

@@ -1,5 +1,5 @@
 [tools]
-helm = "3.19.2"
+helm = "4.0.1"
 kustomize = "5.8"
 talos = "1.11"
 

@@ -13,6 +13,7 @@ spec:
   isCA: true
   commonName: selfsigned-ca
   secretName: root-secret
+  duration: 87600h
   privateKey:
     algorithm: ECDSA
     size: 256

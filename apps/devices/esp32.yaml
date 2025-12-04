@@ -13,10 +13,9 @@ spec:
   duration: 87600h # 10 years
   renewBefore: 360h # 15d
   privateKey:
-    algorithm: RSA
+    algorithm: ECDSA
     encoding: PKCS1
-    size: 2048
+    size: 256
   usages:
     - digital signature
-    - key encipherment
     - client auth

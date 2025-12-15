@@ -15,7 +15,7 @@ spec:
           - 44 # video group
       containers:
         - name: jellyfin
-          image: lscr.io/linuxserver/jellyfin:10.11.4
+          image: lscr.io/linuxserver/jellyfin:10.11.5
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

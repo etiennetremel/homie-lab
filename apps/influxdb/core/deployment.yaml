@@ -36,6 +36,7 @@ spec:
             - --node-id=node0
             - --object-store=file
             - --data-dir=/data
+            - --http-bind=[::]:8181
           env:
             - name: INFLUXDB_KUBERNETES_NAMESPACE
               valueFrom:
@@ -53,12 +54,9 @@ spec:
                 - |
                   # influxdb3 health endpoint require authentication so until
                   # fully initialized with admin token, we assume 401 is ok
-                  if [ -n "$INFLUXDB3_AUTH_TOKEN" ]; then
-                    curl -sf -H "Authorization: Bearer $INFLUXDB3_AUTH_TOKEN" http://localhost:8181/health
-                  else
-                    code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8181/health)
-                    [ "$code" -eq 401 ]
-                  fi
+                  url="http://[::1]:8181/health"
+                  code=$(curl -s -o /dev/null -w "%{http_code}" "$url" || true)
+                  [ "$code" -eq 200 ] || [ "$code" -eq 401 ]
           readinessProbe:
             exec:
               command:
@@ -67,12 +65,9 @@ spec:
                 - |
                   # influxdb3 health endpoint require authentication so until
                   # fully initialized with admin token, we assume 401 is ok
-                  if [ -n "$INFLUXDB3_AUTH_TOKEN" ]; then
-                    curl -sf -H "Authorization: Bearer $INFLUXDB3_AUTH_TOKEN" http://localhost:8181/health
-                  else
-                    code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8181/health)
-                    [ "$code" -eq 401 ]
-                  fi
+                  url="http://[::1]:8181/health"
+                  code=$(curl -s -o /dev/null -w "%{http_code}" "$url" || true)
+                  [ "$code" -eq 200 ] || [ "$code" -eq 401 ]
           securityContext:
             runAsNonRoot: true
             runAsUser: 1500

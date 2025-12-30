@@ -1,5 +1,12 @@
 expose:
-  type: clusterIP
+  type: route
+  route:
+    hosts:
+      - harbor.homie.e10n.me
+    parentRefs:
+      - name: eg
+        sectionName: https
+        namespace: gateway
   tls:
     enabled: true
     certSource: secret
@@ -39,7 +46,3 @@ harbor:
       requests:
         memory: 256Mi
         cpu: 100m
-
-ipFamily:
-  ipv6:
-    enabled: false

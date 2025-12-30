@@ -7,8 +7,4 @@ resources:
   - namespace.yaml
   - core/
   - telegraf/
-  ## Disable explorer for now since really much beta
-  ## and the source code is hosted on a private repo
-  ## managed by the InfluxDB maintainers.
-  ## Use Grafana for visualization instead
-  # - explorer/
+  - explorer/

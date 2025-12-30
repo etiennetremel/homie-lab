@@ -1,7 +1,7 @@
 [tools]
 helm = "3.19.4"
 kustomize = "5.8"
-talos = "1.11"
+talos = "1.12"
 
 [env]
 HELM_REGISTRY_CONFIG = "{{ env.HOME }}/Library/Preferences/helm/registry/config.json"

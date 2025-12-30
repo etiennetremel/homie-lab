@@ -13,7 +13,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: jackett
-          image: lscr.io/linuxserver/jackett:0.22.2231
+          image: lscr.io/linuxserver/jackett:0.24.622
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

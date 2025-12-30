@@ -6,7 +6,9 @@ spec:
   gatewayClassName: eg
   addresses:
     - type: IPAddress
-      value: 192.168.94.254
+      value: 192.168.110.254
+    - type: IPAddress
+      value: 2001:1c08:10f:3c02:4a21:bff:fe60:ee00
   listeners:
     - name: mqtts
       protocol: TCP

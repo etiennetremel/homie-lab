@@ -11,7 +11,7 @@ spec:
       containers:
         - name: nanomq
           # use OpenSSL version of NanoMQ for better compatibility with TLS 1.3
-          image: ghcr.io/etiennetremel/nanomq-openssl:v0.24.6
+          image: ghcr.io/etiennetremel/nanomq-openssl:v0.24.7
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt

@@ -10,24 +10,57 @@ spec:
       serviceAccountName: influxdb-explorer
       containers:
         - name: influxdb-explorer
-          image: quay.io/influxdb/influxdb3-explorer:latest
+          image: influxdata/influxdb3-ui:1.4.0
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8888
+            - containerPort: 80
               name: http
               protocol: TCP
-          ## TODO: check with maintainers
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          #     scheme: HTTP
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          #     scheme: HTTP
+          env:
+            - name: DEFAULT_INFLUX_SERVER
+              value: http://influxdb-core
+            - name: DEFAULT_INFLUX_DATABASE
+              value: sensors
+            - name: DEFAULT_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: influxdb-admin-token
+                  key: INFLUXDB3_AUTH_TOKEN
+          envFrom:
+            - secretRef:
+                name: influxdb-explorer-secrets
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
           securityContext:
+            allowPrivilegeEscalation: false
             runAsNonRoot: true
             runAsUser: 100
             runAsGroup: 101
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+            - name: db
+              mountPath: /db
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: influxdb-explorer-nginx-config
+        - name: db
+          emptyDir: {}

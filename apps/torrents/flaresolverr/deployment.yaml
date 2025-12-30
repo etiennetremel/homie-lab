@@ -16,6 +16,9 @@ spec:
             - name: http
               containerPort: 8191
               protocol: TCP
+          env:
+            - name: HOST
+              value: "::"
           resources:
             limits:
               memory: 512Mi

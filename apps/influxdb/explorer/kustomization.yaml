@@ -3,10 +3,22 @@ kind: Kustomization
 
 resources:
   - deployment.yaml
+  - http-route.yaml
+  - reference-grant.yaml
   - service.yaml
   - serviceaccount.yaml
 
 namespace: influxdb
+
+secretGenerator:
+  - name: influxdb-explorer-secrets
+    envs:
+      - ./influxdb-explorer-secrets.env
+
+configMapGenerator:
+  - name: influxdb-explorer-nginx-config
+    files:
+      - nginx.conf=influxdb-explorer-nginx.conf
 
 labels:
   - includeSelectors: true

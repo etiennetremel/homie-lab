@@ -2,6 +2,8 @@ apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
   name: nanomq-mqtts
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: nanomq.homie.e10n.me
 spec:
   parentRefs:
     - name: nanomq

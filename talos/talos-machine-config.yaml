@@ -18,7 +18,8 @@ machine:
           tpm: {}
 
   certSANs:
-    - 192.168.94.254
+    - 192.168.110.254
+    - 2001:1c08:10f:3c02:4a21:bff:fe60:ee00
 
   kubelet:
     extraArgs:
@@ -33,12 +34,33 @@ cluster:
   # single node Kubernetes deployment
   allowSchedulingOnControlPlanes: true
 
+  network:
+    cni:
+      # use Cilium CNI without kube-proxy
+      name: none
+    dnsDomain: cluster.local
+    podSubnets:
+      - fd00:10::/64
+      - 10.244.0.0/16
+    serviceSubnets:
+      - fd00:20::/108
+      - 10.96.0.0/12
+
   apiServer:
     certSANs:
-        - 192.168.94.254
+      - 192.168.110.254
+      - 2001:1c08:10f:3c02:4a21:bff:fe60:ee00
 
   # install metrics-server
   extraManifests:
-    - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
     - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
     - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+customization:
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/btrfs
+      - siderolabs/i915
+      - siderolabs/intel-ucode
+      - siderolabs/iscsi-tools
+      - siderolabs/mei

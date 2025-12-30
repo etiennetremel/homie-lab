@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../apps/cert-manager
+  - ../../apps/cilium/
   - ../../apps/devices
   - ../../apps/envoy-gateway
   - ../../apps/external-dns
@@ -15,8 +16,7 @@ resources:
   - ../../apps/otaflux
   - ../../apps/synology-csi
   - ../../apps/torrents
-  ## not being used at this time
-  # - ../../apps/ingress-nginx
+  ## not used at this time
   # - ../../apps/mosquitto
   # - ../../apps/homeassistant
   # - ../../apps/n8n
@@ -80,6 +80,11 @@ secretGenerator:
     behavior: merge
     envs:
       - ./telegraf-secrets.env.secret
+  - name: influxdb-explorer-secrets
+    namespace: influxdb
+    behavior: merge
+    envs:
+      - ./influxdb-explorer-secrets.env.secret
   - name: nanomq-secrets
     namespace: nanomq
     behavior: replace

@@ -1,7 +1,20 @@
+[settings]
+experimental = true
+lockfile = true
+
 [tools]
 helm = "3.19.4"
 kustomize = "5.8"
 talos = "1.12"
+age = "1.1.1"
 
 [env]
 HELM_REGISTRY_CONFIG = "{{ env.HOME }}/Library/Preferences/helm/registry/config.json"
+
+[tasks.decrypt]
+description = "Decrypt .secret.age files"
+run = "./hacks/age-decrypt.sh"
+
+[tasks.encrypt]
+description = "Encrypt .secret files into .secret.age and remove .secret files"
+run = "./hacks/age-encrypt.sh"

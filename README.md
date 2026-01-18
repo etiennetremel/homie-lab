@@ -24,7 +24,6 @@ the following stack installed:
 Configuration of the following applications still remains in this repository
 but are not being used:
 - homeassistant => replaced by grafana + influxdb + telegraf
-- ingress-nginx => replaced by envoy-gateway
 - mosquitto => replaced by nanomq
 - n8n => not used
 
@@ -103,6 +102,44 @@ kustomize build --enable-helm clusters/homie | kubectl apply -f - --server-side=
 Notes: while formatting the disk on the first run, the associated pod will stay in a
 ContainerCreating state for a while depending on the disk size.
 
+## Secret management
+
+This repository uses [age][age] for encrypting secrets that are stored in the
+`clusters/homie/` directory. Secrets are files with the `.secret` extension and
+are encrypted into `.secret.age` files.
+
+### Prerequisites
+
+- [age][age] encryption tool (installed via mise)
+- Private key located at `$HOME/.config/age/homie-key.txt`
+
+### Usage
+
+Two mise tasks are available for managing secrets:
+
+```bash
+# Decrypt all .secret.age files to .secret files
+mise run decrypt
+
+# Encrypt all .secret files to .secret.age files and remove the unencrypted files
+mise run encrypt
+```
+
+### How it works
+
+- **Encryption**: The `age-encrypt.sh` script finds all files matching `clusters/**/*.secret`,
+  encrypts them using the private key, saves them with `.age` extension, and removes the original unencrypted files.
+- **Decryption**: The `age-decrypt.sh` script finds all files matching `clusters/**/*.secret.age`,
+  decrypts them back to their original `.secret` filenames.
+
+### Secret files
+
+The following secret files are managed in this repository:
+- Application environment files (`.env.secret`)
+- Configuration files with sensitive data (`.toml.secret`, `.conf.secret`, `.yaml.secret`)
+- TLS certificates and keys
+- API keys and authentication tokens
+
 ## Cluster upgrade
 
 ### Talos upgrade
@@ -176,4 +213,5 @@ For more information regarding the ESP32 implementation, refer to the
 ![Grafana dashboard](./grafana-weather-dashboard.png)
 
 <!-- page links -->
+[age]: https://github.com/FiloSottile/age
 [esp32]: https://github.com/etiennetremel/esp32-home-sensor

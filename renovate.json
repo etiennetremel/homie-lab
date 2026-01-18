@@ -18,7 +18,6 @@
   }],
   "ignorePaths": [
     "apps/homeassistant",
-    "apps/ingress-nginx",
     "apps/mosquitto",
     "apps/n8n"
   ],

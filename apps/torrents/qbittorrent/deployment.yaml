@@ -8,7 +8,7 @@ spec:
   template:
     spec:
       serviceAccountName: qbittorrent
-      initContainers:
+      containers:
         - name: gluetun
           image: ghcr.io/qdm12/gluetun:v3.41.0
           restartPolicy: Always
@@ -65,7 +65,6 @@ spec:
             - name: gluetun-config
               mountPath: /gluetun/auth/config.toml
               subPath: gluetun.toml
-      containers:
         - name: qbittorrent
           image: lscr.io/linuxserver/qbittorrent:5.1.4
           imagePullPolicy: IfNotPresent
@@ -105,10 +104,12 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           livenessProbe:
+            initialDelaySeconds: 30
             httpGet:
               path: /
               port: http
           readinessProbe:
+            initialDelaySeconds: 30
             httpGet:
               path: /
               port: http

@@ -12,7 +12,7 @@ spec:
         - name: nanomq
           # use custom image of NanoMQ with IPv6 and OpenSSL support.
           # OpenSSL has better compatibility with TLS 1.3
-          image: ghcr.io/etiennetremel/nanomq-openssl:v0.24.7
+          image: ghcr.io/etiennetremel/nanomq-openssl:v0.24.9
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt

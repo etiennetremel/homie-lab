@@ -3,7 +3,7 @@ experimental = true
 lockfile = true
 
 [tools]
-helm = "3.19.4"
+helm = "3.20.0"
 kustomize = "5.8"
 talos = "1.12"
 age = "1.3.1"

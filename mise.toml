@@ -1,12 +1,13 @@
 [settings]
-experimental = true
 lockfile = true
+locked = true
 
 [tools]
-helm = "3.20.0"
-kustomize = "5.8"
-talos = "1.12"
 age = "1.3.1"
+helm = "3.20.0"
+kubectl = "	1.35.0"
+kustomize = "5.8"
+talos = "1.12.2"
 
 [env]
 HELM_REGISTRY_CONFIG = "{{ env.HOME }}/Library/Preferences/helm/registry/config.json"
@@ -18,3 +19,8 @@ run = "./hacks/age-decrypt.sh"
 [tasks.encrypt]
 description = "Encrypt .secret files into .secret.age and remove .secret files"
 run = "./hacks/age-encrypt.sh"
+
+[tasks.deploy]
+description = "Deploy cluster homie using kustomize and kubectl"
+run = "kustomize build --enable-helm clusters/homie | kubectl apply -f - --server-side=true"
+depends = ["decrypt"]

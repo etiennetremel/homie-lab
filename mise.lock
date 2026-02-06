@@ -7,13 +7,22 @@ backend = "aqua:FiloSottile/age"
 "platforms.windows-x64" = { checksum = "sha256:c56e8ce22f7e80cb85ad946cc82d198767b056366201d3e1a2b93d865be38154", url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-windows-amd64.zip"}
 
 [[tools.helm]]
-version = "3.19.4"
+version = "3.20.0"
 backend = "aqua:helm/helm"
-"platforms.linux-arm64" = { checksum = "sha256:9e1064f5de43745bdedbff2722a1674d0397bc4b4d8d8196d52a2b730909fe62", url = "https://get.helm.sh/helm-v3.19.4-linux-arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:759c656fbd9c11e6a47784ecbeac6ad1eb16a9e76d202e51163ab78504848862", url = "https://get.helm.sh/helm-v3.19.4-linux-amd64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:7e82ca63fe80a298cecefad61d0c10bc47963ff3551e94ab6470be6393a6a74b", url = "https://get.helm.sh/helm-v3.19.4-darwin-arm64.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:d9c9b1fc499c54282c4127c60cdd506da2c6202506b708a2b45fb6dfdb318f43", url = "https://get.helm.sh/helm-v3.19.4-darwin-amd64.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:1f5599ec85fb15a82f7240c083d00067be5fa91c9fcf48f11c43b6fa59283cd8", url = "https://get.helm.sh/helm-v3.19.4-windows-amd64.tar.gz"}
+"platforms.linux-arm64" = { checksum = "sha256:bfb14953295d5324d47ab55f3dfba6da28d46c848978c8fbf412d4271bdc29f1", url = "https://get.helm.sh/helm-v3.20.0-linux-arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:dbb4c8fc8e19d159d1a63dda8db655f9ffa4aac1b9a6b188b34a40957119b286", url = "https://get.helm.sh/helm-v3.20.0-linux-amd64.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:1cb8022ef9c88026adf236cbdf02a80bf7678632d1c39d3d8045e815959ab20e", url = "https://get.helm.sh/helm-v3.20.0-darwin-arm64.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:724aef60f737ca73cfcc77924219dbfb229dde8492b2722cb372da617fd77367", url = "https://get.helm.sh/helm-v3.20.0-darwin-amd64.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:90c265f70339ff06065213bad60fbedd77b70ff9d42fccf0a105e74933f3a064", url = "https://get.helm.sh/helm-v3.20.0-windows-amd64.tar.gz"}
+
+[[tools.kubectl]]
+version = "\t1.35.0"
+backend = "aqua:kubernetes/kubernetes/kubectl"
+"platforms.linux-arm64" = { url = "https://dl.k8s.io/\t1.35.0/bin/linux/arm64/kubectl"}
+"platforms.linux-x64" = { url = "https://dl.k8s.io/\t1.35.0/bin/linux/amd64/kubectl"}
+"platforms.macos-arm64" = { checksum = "sha256:cf699c56340dc775230fde4ef84237d27563ea6ef52164c7d078072b586c3918", url = "https://dl.k8s.io/\t1.35.0/bin/darwin/arm64/kubectl"}
+"platforms.macos-x64" = { url = "https://dl.k8s.io/\t1.35.0/bin/darwin/amd64/kubectl"}
+"platforms.windows-x64" = { url = "https://dl.k8s.io/\t1.35.0/bin/windows/amd64/kubectl.exe"}
 
 [[tools.kustomize]]
 version = "5.8.0"
@@ -25,10 +34,10 @@ backend = "aqua:kubernetes-sigs/kustomize"
 "platforms.windows-x64" = { checksum = "sha256:7779999c8eb7bdbbaa55c6ecf4fadfdbe7508199ea189f06862835e7e5cb1e41", url = "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v5.8.0/kustomize_v5.8.0_windows_amd64.zip"}
 
 [[tools.talos]]
-version = "1.12.0"
+version = "1.12.2"
 backend = "aqua:siderolabs/talos"
-"platforms.linux-arm64" = { checksum = "sha256:4dbba7abca4fc16d022b13a8eb3b80d2513827cfedeb1a1b0b54df48dad68e66", url = "https://github.com/siderolabs/talos/releases/download/v1.12.0/talosctl-linux-arm64"}
-"platforms.linux-x64" = { checksum = "sha256:11a2745cf92b016b4783acf5eb56bfc394aede61a976dd17b5e8f6d09397e22a", url = "https://github.com/siderolabs/talos/releases/download/v1.12.0/talosctl-linux-amd64"}
-"platforms.macos-arm64" = { checksum = "sha256:5a7736453c9652c1e1899df9eb905a3e640edeecfc513b9e606e44c2c3ec0531", url = "https://github.com/siderolabs/talos/releases/download/v1.12.0/talosctl-darwin-arm64"}
-"platforms.macos-x64" = { checksum = "sha256:5f28272b77fc94e0f314506263305051846cdc464cf33a97fd109028e2afb549", url = "https://github.com/siderolabs/talos/releases/download/v1.12.0/talosctl-darwin-amd64"}
-"platforms.windows-x64" = { checksum = "sha256:e75c4312e93b2c8670416de2eaa3b00dec4ddb115b67cf7a297dc88490765b5c", url = "https://github.com/siderolabs/talos/releases/download/v1.12.0/talosctl-windows-amd64.exe"}
+"platforms.linux-arm64" = { checksum = "sha256:261427453e4c34ecb55a7b6195548acaa0157d7a50d1412697d5865bd269c5f3", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-linux-arm64"}
+"platforms.linux-x64" = { checksum = "sha256:afdd8f7cacbcb0950f3884b4fb90475cc7ee8233331159d7b4d5935be90b5ceb", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-linux-amd64"}
+"platforms.macos-arm64" = { checksum = "sha256:0c0bad4e2e803464a546be3035d3e75cbfeb0ecdf1bed108e932c4b8f1a4e401", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-darwin-arm64"}
+"platforms.macos-x64" = { checksum = "sha256:4145e01a1e930110876b006db116cfc1d7d69eb220d4ea615c8b2343507e7d3a", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-darwin-amd64"}
+"platforms.windows-x64" = { checksum = "sha256:e024745cb94805176a291ce04ec7fa13a9400609f60763a5335badda570d5f82", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-windows-amd64.exe"}

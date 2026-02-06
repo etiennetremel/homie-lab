@@ -35,7 +35,7 @@ but are not being used:
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.12.0/metal-amd64-secureboot.iso
+wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.12.2/metal-amd64-secureboot.iso
 
 hdiutil convert -format UDRW -o metal-amd64-secureboot.img metal-amd64-secureboot.iso
 mv metal-amd64-secureboot.img{.dmg,}
@@ -55,7 +55,7 @@ diskutil eject /dev/disk3
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.0
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.2
 
 export MACHINE_IP=192.168.110.254
 
@@ -148,7 +148,7 @@ The following secret files are managed in this repository:
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.0
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.2
 
 export MACHINE_IP=192.168.110.254
 

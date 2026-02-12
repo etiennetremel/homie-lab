@@ -9,7 +9,7 @@ namespace: kubernetes-replicator
 helmCharts:
   - name: kubernetes-replicator
     repo: https://helm.mittwald.de
-    version: 2.12.2
+    version: 2.12.3
     releaseName: kubernetes-replicator
 
 # inject namespace until this PR is merged: https://github.com/mittwald/kubernetes-replicator/pull/395

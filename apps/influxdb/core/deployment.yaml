@@ -37,6 +37,7 @@ spec:
             - --object-store=file
             - --data-dir=/data
             - --http-bind=[::]:8181
+            - --disable-authz=health
           env:
             - name: INFLUXDB_KUBERNETES_NAMESPACE
               valueFrom:
@@ -47,27 +48,13 @@ spec:
                 name: influxdb-admin-token
                 optional: true
           livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - |
-                  # influxdb3 health endpoint require authentication so until
-                  # fully initialized with admin token, we assume 401 is ok
-                  url="http://[::1]:8181/health"
-                  code=$(curl -s -o /dev/null -w "%{http_code}" "$url" || true)
-                  [ "$code" -eq 200 ] || [ "$code" -eq 401 ]
+            httpGet:
+              path: /health
+              port: http
           readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - |
-                  # influxdb3 health endpoint require authentication so until
-                  # fully initialized with admin token, we assume 401 is ok
-                  url="http://[::1]:8181/health"
-                  code=$(curl -s -o /dev/null -w "%{http_code}" "$url" || true)
-                  [ "$code" -eq 200 ] || [ "$code" -eq 401 ]
+            httpGet:
+              path: /health
+              port: http
           securityContext:
             runAsNonRoot: true
             runAsUser: 1500

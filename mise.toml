@@ -1,6 +1,5 @@
 [settings]
 lockfile = true
-locked = true
 
 [tools]
 age = "1.3.1"

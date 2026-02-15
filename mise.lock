@@ -16,13 +16,13 @@ backend = "aqua:helm/helm"
 "platforms.windows-x64" = { checksum = "sha256:90c265f70339ff06065213bad60fbedd77b70ff9d42fccf0a105e74933f3a064", url = "https://get.helm.sh/helm-v3.20.0-windows-amd64.tar.gz"}
 
 [[tools.kubectl]]
-version = "\t1.35.0"
+version = "1.35.1"
 backend = "aqua:kubernetes/kubernetes/kubectl"
-"platforms.linux-arm64" = { url = "https://dl.k8s.io/\t1.35.0/bin/linux/arm64/kubectl"}
-"platforms.linux-x64" = { url = "https://dl.k8s.io/\t1.35.0/bin/linux/amd64/kubectl"}
-"platforms.macos-arm64" = { checksum = "sha256:cf699c56340dc775230fde4ef84237d27563ea6ef52164c7d078072b586c3918", url = "https://dl.k8s.io/\t1.35.0/bin/darwin/arm64/kubectl"}
-"platforms.macos-x64" = { url = "https://dl.k8s.io/\t1.35.0/bin/darwin/amd64/kubectl"}
-"platforms.windows-x64" = { url = "https://dl.k8s.io/\t1.35.0/bin/windows/amd64/kubectl.exe"}
+"platforms.linux-arm64" = { checksum = "sha256:706256e21a4e9192ee62d1a007ac0bfcff2b0b26e92cc7baad487a6a5d08ff82", url = "https://dl.k8s.io/v1.35.1/bin/linux/arm64/kubectl"}
+"platforms.linux-x64" = { checksum = "sha256:36e2f4ac66259232341dd7866952d64a958846470f6a9a6a813b9117bd965207", url = "https://dl.k8s.io/v1.35.1/bin/linux/amd64/kubectl"}
+"platforms.macos-arm64" = { checksum = "sha256:2b000dded317319b1ebca19c2bc70f772c7aaa0e8962fae2d987ba04dd1a1b50", url = "https://dl.k8s.io/v1.35.1/bin/darwin/arm64/kubectl"}
+"platforms.macos-x64" = { checksum = "sha256:07a04d82bc2de2f5d53dfd81f2109ca864f634a82b225257daa2f9c2db15ccef", url = "https://dl.k8s.io/v1.35.1/bin/darwin/amd64/kubectl"}
+"platforms.windows-x64" = { checksum = "sha256:d2d28ca3440ed94262b9b4bffb30119cfca69ac30b9cad531a08e8ebd9720dd2", url = "https://dl.k8s.io/v1.35.1/bin/windows/amd64/kubectl.exe"}
 
 [[tools.kustomize]]
 version = "5.8.0"

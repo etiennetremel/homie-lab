@@ -1,10 +1,10 @@
-apiVersion: gateway.networking.k8s.io/v1alpha2
-kind: TCPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: TLSRoute
 metadata:
   name: nanomq-mqtts
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: nanomq.homie.e10n.me
 spec:
+  hostnames:
+    - nanomq.homie.e10n.me
   parentRefs:
     - name: nanomq
       sectionName: mqtts
@@ -12,5 +12,4 @@ spec:
   rules:
     - backendRefs:
         - name: nanomq
-          namespace: nanomq
           port: 8883

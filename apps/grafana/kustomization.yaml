@@ -6,7 +6,6 @@ resources:
   - dashboards/
   - http-route.yaml
   - namespace.yaml
-  - reference-grant.yaml
 
 namespace: grafana
 

@@ -35,7 +35,7 @@ but are not being used:
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.12.2/metal-amd64-secureboot.iso
+wget https://factory.talos.dev/image/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16/v1.12.4/metal-amd64-secureboot.iso
 
 hdiutil convert -format UDRW -o metal-amd64-secureboot.img metal-amd64-secureboot.iso
 mv metal-amd64-secureboot.img{.dmg,}
@@ -55,7 +55,7 @@ diskutil eject /dev/disk3
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # You can generate your own image from https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.2
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.4
 
 export MACHINE_IP=192.168.110.254
 
@@ -148,7 +148,7 @@ The following secret files are managed in this repository:
 # following image has secureboot enabled, include btrfs, iscsi-tools, mei,
 # i915 and intel-ucode extensions.
 # https://factory.talos.dev
-export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.2
+export TALOS_FACTORY_IMAGE_INSTALLER=factory.talos.dev/installer-secureboot/18fe771c6eccb97c798d475f038a98080dae33b68ade749caf16e3dfbda44f16:v1.12.4
 
 export MACHINE_IP=192.168.110.254
 
@@ -168,7 +168,7 @@ talosctl apply-config \
 
 ```bash
 export MACHINE_IP=192.168.110.254
-export KUBERNETES_VERSION=1.35.0
+export KUBERNETES_VERSION=1.35.1
 
 talosctl upgrade-k8s \
   -n "$MACHINE_IP" \
@@ -185,8 +185,13 @@ yq -r .machine.ca.crt controlplane.yaml | base64 -d > ca.crt && \
 yq -r .machine.ca.key controlplane.yaml | base64 -d > ca.key && \
 talosctl gen key --name admin && \
 talosctl gen csr --key admin.key --ip "$MACHINE_IP" && \
-talosctl gen crt --ca ca.crt --csr admin.csr --name admin --days 8760 && \
+talosctl gen crt --ca ca --csr admin.csr --name admin --hours 8760
+
+# linux
 yq eval '.contexts.homie.ca = "'"$(base64 -w0 ca.crt)"'" | .contexts.homie.crt = "'"$(base64 -w0 admin.crt)"'" | .contexts.homie.key = "'"$(base64 -w0 admin.key)"'"' -i talosconfig
+
+# on mac:
+yq eval '.contexts.homie.ca = "'"$(base64 -i ca.crt)"'" | .contexts.homie.crt = "'"$(base64 -i admin.crt)"'" | .contexts.homie.key = "'"$(base64 -i admin.key)"'"' -i talosconfig
 ```
 
 Based on https://github.com/siderolabs/talos/discussions/9457.

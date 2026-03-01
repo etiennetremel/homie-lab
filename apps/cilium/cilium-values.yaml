@@ -1,6 +1,8 @@
 ipam:
   mode: kubernetes
 kubeProxyReplacement: true
+l2announcements:
+  enabled: true
 securityContext:
   capabilities:
     ciliumAgent:
@@ -28,4 +30,10 @@ k8sServicePort: 7445
 operator:
   replicas: 1
 ipv6:
+  enabled: true
+gatewayAPI:
+  enabled: true
+  gatewayClass:
+    create: "true"
+envoy:
   enabled: true

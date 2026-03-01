@@ -5,7 +5,6 @@ resources:
   - ../../apps/cert-manager
   - ../../apps/cilium/
   - ../../apps/devices
-  - ../../apps/envoy-gateway
   - ../../apps/external-dns
   - ../../apps/gateway
   - ../../apps/grafana
@@ -17,6 +16,7 @@ resources:
   - ../../apps/synology-csi
   - ../../apps/torrents
   ## not used at this time
+  # - ../../apps/envoy-gateway
   # - ../../apps/mosquitto
   # - ../../apps/homeassistant
   # - ../../apps/n8n

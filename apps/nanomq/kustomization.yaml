@@ -5,10 +5,9 @@ resources:
   - certificates.yaml
   - deployment.yaml
   - namespace.yaml
-  - reference-grant.yaml
   - service.yaml
   - serviceaccount.yaml
-  - tcp-route.yaml
+  - tlsroute.yaml
 
 namespace: nanomq
 

@@ -8,6 +8,11 @@ spec:
   template:
     spec:
       serviceAccountName: external-dns
+      podSecurityContext:
+        runAsNonRoot: true
+        fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: external-dns
           image: registry.k8s.io/external-dns/external-dns:v0.20.0
@@ -28,6 +33,14 @@ spec:
             - secretRef:
                 name: cloudflare-secrets
           securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            capabilities:
+              drop: ["ALL"]
             seccompProfile:
               type: RuntimeDefault
           livenessProbe:

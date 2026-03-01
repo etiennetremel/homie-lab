@@ -11,3 +11,4 @@ spec:
   to:
     - group: ""
       kind: Secret
+      name: wildcard-certificate

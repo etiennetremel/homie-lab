@@ -5,15 +5,15 @@ resources:
   - certificate.yaml
   - http-route.yaml
   - namespace.yaml
-  - reference-grant-certs.yaml
-  - reference-grant-service.yaml
+  - reference-grant.yaml
 
 namespace: otaflux
 
 labels:
   - includeSelectors: true
     pairs:
-      app: otaflux
+      app.kubernetes.io/instance: otaflux
+      app.kubernetes.io/name: otaflux
 
 helmCharts:
   - name: otaflux

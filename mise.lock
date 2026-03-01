@@ -34,10 +34,6 @@ backend = "aqua:kubernetes-sigs/kustomize"
 "platforms.windows-x64" = { checksum = "sha256:7779999c8eb7bdbbaa55c6ecf4fadfdbe7508199ea189f06862835e7e5cb1e41", url = "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v5.8.0/kustomize_v5.8.0_windows_amd64.zip"}
 
 [[tools.talos]]
-version = "1.12.2"
+version = "1.12.4"
 backend = "aqua:siderolabs/talos"
-"platforms.linux-arm64" = { checksum = "sha256:261427453e4c34ecb55a7b6195548acaa0157d7a50d1412697d5865bd269c5f3", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-linux-arm64"}
-"platforms.linux-x64" = { checksum = "sha256:afdd8f7cacbcb0950f3884b4fb90475cc7ee8233331159d7b4d5935be90b5ceb", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-linux-amd64"}
-"platforms.macos-arm64" = { checksum = "sha256:0c0bad4e2e803464a546be3035d3e75cbfeb0ecdf1bed108e932c4b8f1a4e401", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-darwin-arm64"}
-"platforms.macos-x64" = { checksum = "sha256:4145e01a1e930110876b006db116cfc1d7d69eb220d4ea615c8b2343507e7d3a", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-darwin-amd64"}
-"platforms.windows-x64" = { checksum = "sha256:e024745cb94805176a291ce04ec7fa13a9400609f60763a5335badda570d5f82", url = "https://github.com/siderolabs/talos/releases/download/v1.12.2/talosctl-windows-amd64.exe"}
+"platforms.macos-arm64" = { checksum = "sha256:f4c94d4832e9d41f67cc63cd362cc0bfd44d8c675e9ff04541411be40916096c", url = "https://github.com/siderolabs/talos/releases/download/v1.12.4/talosctl-darwin-arm64"}

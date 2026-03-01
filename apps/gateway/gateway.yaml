@@ -3,12 +3,7 @@ kind: Gateway
 metadata:
   name: eg
 spec:
-  gatewayClassName: eg
-  addresses:
-    - type: IPAddress
-      value: 192.168.110.254
-    - type: IPAddress
-      value: 2001:1c08:10f:3c02:4a21:bff:fe60:ee00
+  gatewayClassName: cilium
   listeners:
     - name: http
       protocol: HTTP
@@ -30,6 +25,16 @@ spec:
             group: ""
             name: wildcard-certificate
             namespace: cert-manager
+    - name: otaflux
+      protocol: HTTPS
+      port: 443
+      hostname: 'otaflux.homie.e10n.me'
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
           - kind: Secret
             group: ""
             name: otaflux-certs

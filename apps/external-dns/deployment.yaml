@@ -8,7 +8,7 @@ spec:
   template:
     spec:
       serviceAccountName: external-dns
-      podSecurityContext:
+      securityContext:
         runAsNonRoot: true
         fsGroup: 65534
         seccompProfile:

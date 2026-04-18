@@ -168,7 +168,7 @@ talosctl apply-config \
 
 ```bash
 export MACHINE_IP=192.168.110.254
-export KUBERNETES_VERSION=1.35.3
+export KUBERNETES_VERSION=1.35.4
 
 talosctl upgrade-k8s \
   -n "$MACHINE_IP" \

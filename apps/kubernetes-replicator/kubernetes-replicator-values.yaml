@@ -1,6 +1,7 @@
 image:
   pullPolicy: IfNotPresent
 securityContext:
+  allowPrivilegeEscalation: false
   capabilities:
     drop:
       - ALL

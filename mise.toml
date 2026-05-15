@@ -5,7 +5,7 @@ lockfile = true
 age = "1.3.1"
 helm = "4.2.0"
 kubectl = "1.36.1"
-kustomize = "5.8"
+kustomize = "5.8.1"
 talos = "1.13.2"
 
 [env]

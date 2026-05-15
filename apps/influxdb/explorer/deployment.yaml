@@ -13,7 +13,7 @@ spec:
           image: influxdata/influxdb3-ui:1.8.0
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
               protocol: TCP
           env:
@@ -42,15 +42,13 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 100
-            runAsGroup: 101
+            runAsUser: 1500
+            runAsGroup: 1500
             seccompProfile:
               type: RuntimeDefault
             capabilities:
               drop:
                 - ALL
-              add:
-                - NET_BIND_SERVICE
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/nginx.conf

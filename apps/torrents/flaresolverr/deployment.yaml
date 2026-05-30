@@ -10,7 +10,7 @@ spec:
       serviceAccountName: flaresolverr
       containers:
         - name: flaresolverr
-          image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
+          image: ghcr.io/flaresolverr/flaresolverr:v3.5.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

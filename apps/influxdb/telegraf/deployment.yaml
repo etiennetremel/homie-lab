@@ -10,7 +10,7 @@ spec:
       serviceAccountName: telegraf
       containers:
         - name: telegraf
-          image: telegraf:1.38.4-alpine
+          image: telegraf:1.39.3-alpine
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:

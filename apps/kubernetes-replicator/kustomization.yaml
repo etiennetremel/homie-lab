@@ -9,6 +9,6 @@ namespace: kubernetes-replicator
 helmCharts:
   - name: kubernetes-replicator
     repo: https://helm.mittwald.de
-    version: 2.12.3
+    version: 2.12.4
     releaseName: kubernetes-replicator
     valuesFile: kubernetes-replicator-values.yaml

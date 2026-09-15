@@ -19,11 +19,15 @@ machine:
 
   certSANs:
     - 192.168.110.254
-    - 2001:1c08:10f:3c02:4a21:bff:fe60:ee00
+    - 2001:1c08:10f:3c03:4a21:bff:fe60:ee00
 
   kubelet:
     extraArgs:
       rotate-server-certificates: true
+
+  kernel:
+    modules:
+      - name: btrfs
 
   udev:
     rules:
@@ -49,7 +53,7 @@ cluster:
   apiServer:
     certSANs:
       - 192.168.110.254
-      - 2001:1c08:10f:3c02:4a21:bff:fe60:ee00
+      - 2001:1c08:10f:3c03:4a21:bff:fe60:ee00
 
   # install metrics-server
   extraManifests:

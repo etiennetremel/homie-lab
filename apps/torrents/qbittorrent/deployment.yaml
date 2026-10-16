@@ -8,6 +8,10 @@ spec:
   template:
     spec:
       serviceAccountName: qbittorrent
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
       containers:
         - name: gluetun
           image: ghcr.io/qdm12/gluetun:v3.41.3
@@ -103,6 +107,12 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            failureThreshold: 30
           livenessProbe:
             initialDelaySeconds: 30
             httpGet:

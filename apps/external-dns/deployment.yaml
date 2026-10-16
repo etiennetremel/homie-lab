@@ -24,6 +24,7 @@ spec:
             - --source=gateway-tcproute
             - --source=gateway-udproute
             - --registry=txt
+            - --policy=sync
             - --provider=cloudflare
           ports:
             - containerPort: 7979

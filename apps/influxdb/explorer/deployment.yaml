@@ -10,7 +10,7 @@ spec:
       serviceAccountName: influxdb-explorer
       containers:
         - name: influxdb-explorer
-          image: influxdata/influxdb3-ui:1.11.1
+          image: influxdata/influxdb3-ui:1.12.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
